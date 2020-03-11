@@ -9,7 +9,8 @@ const jwt = require('jsonwebtoken');
 
 const expect = require("chai").expect;
 
-const config = require("./config")
+const config = require("./config");
+const usersToRemove = [];
 
 //////
 var db;
@@ -209,6 +210,7 @@ before(async function() {
         user["login"] = login;
 
         console.log(`User - id: ${id}, name: ${name}, login: ${login} has been added.`);
+        usersToRemove.push(id);
         
         const claims = {
             id:  id,
@@ -356,8 +358,83 @@ describe('#Authentication tests', function() {
         expect(response.status).to.equal(401);
         const json = await response.json();
         expect(json.success).to.equal(false);
-        expect(json.message).to.equal("Authorization not provided.");  
+        expect(json.message).to.equal("Invalid credentials.");  
     });
+    describe("", async function() {
+        it('## Should 401 (no client with this id)', async function() {
+            // it means that the token is correct (has correct secret) but isn't in database
+            // first I create new token with custom user id
+            const id = uuidv4();
+            const random = `User ${Math.random()}`; 
+
+            const name = random;
+            const login = random;
+    
+            await db.collection("clients").insertOne({
+                id: id,
+                name: name,
+                login: login
+            });
+            
+            const claims = {
+                id:  id,
+                iat:  Date.now()
+            }
+
+            const expiresIn = Date.now() + 10800000; // 3 hours
+            const options = {
+                algorithm:  "HS256"
+            };
+
+            const tokenForPassword = jwt.sign(claims, config.secret, options);
+            
+            await db.collection("create_password_tokens").insertOne({
+                id: id,
+                token: tokenForPassword,
+                expiresIn: expiresIn
+            });
+            // user has correct password token so can has password
+            const password = "password_of_user_123456%$3!@!sSS";
+            await fetch('https://kompar-api-se.herokuapp.com/test/password', {
+                method: 'post',
+                body:    JSON.stringify({ 
+                    "password": password,
+                    "token": tokenForPassword
+                }),
+                headers: { "Content-type": "application/json" }
+            })
+            // User has password, now he can get token
+            const auth = new Buffer(`${login}:${password}`).toString('base64');
+            const response = await fetch('https://kompar-api-se.herokuapp.com/test/token', {
+                method: 'get',
+                headers: {
+                    "Authorization": `Basic ${auth}`
+                }
+            })
+            const json = await response.json();
+            const token = `${json.token_type} ${json.token}`;
+            // he has correct token so we will change his id to custom 
+            const newId = uuidv4();
+            await db.collection("clients").updateOne(
+                { id: id }, { 
+                    $set: { 
+                        id: newId
+                    }
+                }
+            );
+            usersToRemove.push(newId);
+            // now he has correct token, which will be validated but isn't in database
+            const response2 = await fetch('https://kompar-api-se.herokuapp.com/test/webhooks/applications', {
+                method: 'POST',
+                headers: { "Authorization": token }
+            })
+            expect(response2.status).to.equal(401);
+            const json2 = await response2.json();
+            expect(json2.success).to.equal(false);
+            expect(json2.message).to.equal("Invalid credentials.");  
+        });
+    });
+    
     // it('## Should 400 no method (should be post)', async function() {
     //     const response = await fetch('https://kompar-api-se.herokuapp.com/test/webhooks/applications', {
     //         method: 'get'
@@ -372,7 +449,7 @@ describe('#Authentication tests', function() {
 
 after(async function() {
     //await db.collection("create_password_token").deleteMany({ id: { $in: idOfTokenToRemove } });
-    await db.collection("clients").deleteOne( { id: user["id"]});
+    await db.collection("clients").deleteMany({id: { $in: usersToRemove }});
 });
 
 // it('Main page content', function(done) {
