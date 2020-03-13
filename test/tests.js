@@ -18,6 +18,12 @@ const webhooksToRemove = [];
 var db;
 
 before(function(done) {
+    this.timeout(5000);
+    setTimeout(5000, done());
+});
+
+before(function(done) {
+    console.log("\n\n");
     config.before(function(_db) {
         db = _db;
         done();
@@ -667,21 +673,18 @@ describe('#Webhook tests', async function() {
         expect(json2.success).to.equal(true);
     });
 });
-describe('#Webhook application details tests', async function() {
-    var app1 = express();
-    app1.use(bodyParser.json());
-    before(function(done) {
-        this.timeout(4000);
-        app1.post("/a", function(req, res) {
-            console.log("dudduud");
-            return res.status(200).end();
-        });
-        app1.listen(6000, () => {
-            console.log(`App1 for ${user["login"]} listening on port: ${6000}`);
-        });
-        setTimeout(done, 3000);
-    });
 
+var app1 = express();
+app1.use(bodyParser.json());
+app1.post("/a", function(req, res) {
+    console.log("dudduud");
+    return res.status(200).end();
+});
+app1.listen(6000, () => {
+    console.log(`App1 for ${user["login"]} listening on port: ${6000}`);
+});
+
+describe('#Webhook application details tests', async function() {
     before(async function() {
         const auth = new Buffer(`${user.login}:${user.password}`).toString('base64');
         const response = await fetch('https://kompar-api-se.herokuapp.com/test/token', {
@@ -690,21 +693,10 @@ describe('#Webhook application details tests', async function() {
                 "Authorization": `Basic ${auth}`
             }
         })
-        expect(response.status).to.equal(200);
         const json = await response.json();
-        expect(json.success).to.equal(true);
         user["token"] = `${json.token_type} ${json.token}`;
     })
     before(async function() {
-        await fetch('https://kompar-api-se.herokuapp.com/test/webhooks/applications', {
-            method: 'POST',
-            headers: { 
-                "Authorization": user["token"],
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({"url": "https://random.com"})
-        })
-        // we can't register http so we have to register https and change it manually to http
         await db.collection("webhooks").updateOne(
             { client_id: user["id"], type: "applications"  }, { 
                 $set: { 
@@ -712,10 +704,7 @@ describe('#Webhook application details tests', async function() {
                 }
             }
         );
-    })
-    // after this function user is registered to webhook and may get notifications
-    it('## Test server of lender should receive application', async function() {
-        await fetch('https://kompar-api-se.herokuapp.com/test/send/webhooks/application', {
+        await fetch('http://localhost:3000/test/send/webhooks/application', {
             method: 'POST',
             headers: {
                 "Authorization": config.auth_bubble_1,
@@ -724,9 +713,17 @@ describe('#Webhook application details tests', async function() {
                 "id": "1"
             })
         })
+    })
+
+    // after this function user is registered to webhook and may get notifications
+    it('## Test server of lender should receive application', function(done) {
+        this.timeout(20000);
+        setTimeout(function() {
+            expect(404).to.equal(404);
+            done();
+        }, 19000)
         
     })
-    
 });
 
 after(async function() {
