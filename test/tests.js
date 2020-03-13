@@ -674,10 +674,12 @@ describe('#Webhook tests', async function() {
     });
 });
 
+const app1response = {};
+
 var app1 = express();
 app1.use(bodyParser.json());
 app1.post("/a", function(req, res) {
-    console.log("dudduud");
+    app1response["received"] = true;
     return res.status(200).end();
 });
 app1.listen(6000, () => {
@@ -717,11 +719,11 @@ describe('#Webhook application details tests', async function() {
 
     // after this function user is registered to webhook and may get notifications
     it('## Test server of lender should receive application', function(done) {
-        this.timeout(20000);
+        this.timeout(5100);
         setTimeout(function() {
-            expect(404).to.equal(404);
+            expect(app1response["received"]).to.equal(true);
             done();
-        }, 19000)
+        }, 5000)
         
     })
 });
