@@ -674,13 +674,28 @@ describe('#Webhook tests', async function() {
     });
 });
 
-const app1response = {};
+const app1Object = { "current":0 };
 
 var app1 = express();
 app1.use(bodyParser.json());
 app1.post("/a", function(req, res) {
-    app1response["received"] = true;
-    return res.status(200).end();
+    console.log("test lender current: " + app1Object["current"]);
+    if (app1Object["current"] === 0) {
+        app1Object["current"] = app1Object["current"] + 1;
+        app1Object["confirmed1"] = true;
+        return res.status(200).end();
+    }
+    if (app1Object["current"] === 1) {
+        app1Object["current"] = app1Object["current"] + 1;
+        app1Object["confirmed2"] = false;
+        return res.status(400).end();
+    }
+    if (app1Object["current"] === 2) {
+        app1Object["current"] = app1Object["current"] + 1;
+        app1Object["confirmed3"] = true;
+        return res.status(200).end();
+    }
+    
 });
 app1.listen(6000, () => {
     console.log(`App1 for ${user["login"]} listening on port: ${6000}`);
@@ -718,13 +733,26 @@ describe('#Webhook application details tests', async function() {
     })
 
     // after this function user is registered to webhook and may get notifications
-    it('## Test server of lender should receive application', function(done) {
-        this.timeout(5100);
+    it('## Test server of lender should receive application and confirmed', function(done) {
+        this.timeout(2600);
         setTimeout(function() {
-            expect(app1response["received"]).to.equal(true);
+            expect(app1Object["confirmed1"]).to.equal(true);
+            done();
+        }, 2500)
+    })
+    it('## Test server of lender should receive application and no confirmed', function(done) {
+        this.timeout(2600);
+        setTimeout(function() {
+            expect(app1Object["confirmed2"]).to.equal(false);
+            done();
+        }, 2500)
+    })
+    it('## Test server of lender should receive application for first resend and confirmed', function(done) {
+        this.timeout(5200);
+        setTimeout(function() {
+            expect(app1Object["confirmed3"]).to.equal(true);
             done();
         }, 5000)
-        
     })
 });
 
