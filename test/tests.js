@@ -17,6 +17,10 @@ const webhooksToRemove = [];
 //////
 var db;
 
+fetch('https://api-automatic-testing.herokuapp.com/init', {
+    method: 'get'
+})
+
 before(function(done) {
     this.timeout(5000);
     setTimeout(5000, done());
@@ -672,33 +676,6 @@ describe('#Webhook tests', async function() {
         const json2 = await response2.json();
         expect(json2.success).to.equal(true);
     });
-});
-
-const app1Object = { "current":0 };
-
-var app1 = express();
-app1.use(bodyParser.json());
-app1.post("/a", function(req, res) {
-    console.log("test lender current: " + app1Object["current"]);
-    if (app1Object["current"] === 0) {
-        app1Object["current"] = app1Object["current"] + 1;
-        app1Object["confirmed1"] = true;
-        return res.status(200).end();
-    }
-    if (app1Object["current"] === 1) {
-        app1Object["current"] = app1Object["current"] + 1;
-        app1Object["confirmed2"] = false;
-        return res.status(400).end();
-    }
-    if (app1Object["current"] === 2) {
-        app1Object["current"] = app1Object["current"] + 1;
-        app1Object["confirmed3"] = true;
-        return res.status(200).end();
-    }
-    
-});
-app1.listen(6000, () => {
-    console.log(`App1 for ${user["login"]} listening on port: ${6000}`);
 });
 
 describe('#Webhook application details tests', async function() {
