@@ -9,9 +9,9 @@ class Config {
     constructor() {
         this.DB = {
             uri: "mongodb+srv://new_user_1:jIJj887hhhaisaW87haaaKu77jAs@cluster0-r3os4.mongodb.net/test?retryWrites=true&w=majority",
-            database_name: "test"
+            database_name: "test_1"
         }
-        this.secret = "054651db5112578a83e327e00408836ec743aabfa248cb7131353709e2b44c6297ef71afb7d91b8bbbfda8a4b9a7aee52dd5dca8ab25bee39282546f9e7c4712fc1fe9279a451e0aee363f993eaab04a243c5e9a6e1bb4bffe15e95e40904d1e7317dbe60432693dce745e5df1595c0e180402059c28636733bb59ee4557457d";
+        this.secret = "0159f9600c7452a560ab4c16147941ac37c521b5f65327353f57178d3c12d46350b98367847e434f7daebedbe95806f8bcd771c35d633964fe2ce8727f1e332baf117e8b98dd8c243dd7186c900e4e8b71b3e5338b20b3e78635f3f614b876b28723426528ae11610eb92c3039640da593ac7b75357fd7daffcadb0d3a90fc51";
         this.auth_bubble_1 = "Basic S3ViYTpCYW5hc2lhaw==";
     }
     before(onFinish) {
