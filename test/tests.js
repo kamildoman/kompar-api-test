@@ -34,288 +34,288 @@ before(function(done) {
     })
 });
 
-describe('#Create Password', function() {
-    it('## Should 404 (no body)', async function() {
-        const response = await fetch('https://api.kompar.se/test/password', {
-            method: 'post',
-            headers: { "Content-type": "application/json" }
-        })
-        expect(response.status).to.equal(404);
-    });
-    it('## Should 404 (no password)', async function() {
-        const response = await fetch('https://api.kompar.se/test/password', {
-            method: 'post',
-            body:    JSON.stringify({ "token": "any token" }),
-            headers: { "Content-type": "application/json" }
-        })
-        expect(response.status).to.equal(404);
-    });
-    it('## Should 404 (no token)', async function() {
-        const response = await fetch('https://api.kompar.se/test/password', {
-            method: 'post',
-            body:    JSON.stringify({ "password": "any password" }),
-            headers: { "Content-type": "application/json" }
-        })
-        expect(response.status).to.equal(404);
-    });
-    it('## Should 404 (wrong token)', async function() {
-        const response = await fetch('https://api.kompar.se/test/password', {
-            method: 'post',
-            body:    JSON.stringify({ 
-                "password": "any password",
-                "token": "any_token"
-            }),
-            headers: { "Content-type": "application/json" }
-        })
-        expect(response.status).to.equal(404);
-    });
-    it('## Should 404 (wrong token - invalid signature)', async function() {
-        const id = uuidv4();
-        
-        const claims = {
-            id:  id,
-            iat:  Date.now()
-        }
-
-        const options = {
-            algorithm:  "HS256"
-        };
-
-        const token = jwt.sign(claims, "any_secret", options);
-
-        const response = await fetch('https://api.kompar.se/test/password', {
-            method: 'post',
-            body:    JSON.stringify({ 
-                "password": "any password",
-                "token": token
-            }),
-            headers: { "Content-type": "application/json" }
-        })
-        expect(response.status).to.equal(404);
-    });
-    it('## Should 401 (wrong token - no in database)', async function() {
-        const id = uuidv4();
-        
-        const claims = {
-            id:  id,
-            iat:  Date.now()
-        }
-
-        const options = {
-            algorithm:  "HS256"
-        };
-
-        const token = jwt.sign(claims, config.secret, options);
-
-        const response = await fetch('https://api.kompar.se/test/password', {
-            method: 'post',
-            body:    JSON.stringify({ 
-                "password": "any password",
-                "token": token
-            }),
-            headers: { "Content-type": "application/json" }
-        })
-        expect(response.status).to.equal(200);
-        const json = await response.json();
-        expect(json.message).to.equal("You have no permission to change password.");
-    });
-    describe("", async function() {
-        const id = uuidv4();
-            
-        const claims = {
-            id:  id,
-            iat:  Date.now()
-        }
-    
-        const options = {
-            algorithm:  "HS256"
-        };
-    
-        const token = jwt.sign(claims, config.secret, options);
-
-        before(async function() {
-            await db.collection("create_password_tokens").insertOne({
-                id: id,
-                token: token,
-                expiresIn: Date.now() - 100000
-            });
-        })
-        it('## Should 401 (wrong token - expired)', async function() {
-            const response = await fetch('https://api.kompar.se/test/password', {
-                method: 'post',
-                body:    JSON.stringify({ 
-                    "password": "any password",
-                    "token": token
-                }),
-                headers: { "Content-type": "application/json" }
-            })
-            expect(response.status).to.equal(200);
-            const json = await response.json();
-            expect(json.message).to.equal("Token is expired.");
-        });
-    })
-    describe("", async function() {
-        const id = uuidv4();
-            
-        const claims = {
-            id:  id,
-            iat:  Date.now()
-        }
-    
-        const options = {
-            algorithm:  "HS256"
-        };
-    
-        const token = jwt.sign(claims, config.secret, options);
-
-        before(async function() {
-            await db.collection("create_password_tokens").insertOne({
-                id: id,
-                token: token,
-                expiresIn: Date.now() + 60000000
-            });
-        })
-        it('## Should 200 (correct token)', async function() {
-            const response = await fetch('https://api.kompar.se/test/password', {
-                method: 'post',
-                body:    JSON.stringify({ 
-                    "password": "any password",
-                    "token": token
-                }),
-                headers: { "Content-type": "application/json" }
-            })
-            expect(response.status).to.equal(200);
-            const json = await response.json();
-            expect(json.message).to.equal("Password has been created. You can close the page.");
-        });
-    })
-});
-
-// const user = {};
-
-// before(async function() {
-//     const id = uuidv4();
-//     const random = `User ${Math.random()}`;
-
-//     const name = random;
-//     const login = random;
-
-//     const key = crypto.randomBytes(16).toString('hex');
-//     const auth = crypto.randomBytes(32).toString('hex');
-
-//     await db.collection("clients").insertOne({
-//         id: id,
-//         name: name,
-//         login: login,
-//         key: key,
-//         auth: auth
-//     });
-
-//     user["id"] = id;
-//     user["login"] = login;
-
-//     console.log(`User - id: ${id}, name: ${name}, login: ${login} has been added.`);
-//     usersToRemove.push(id);
-//     webhooksToRemove.push(id);
-    
-//     const claims = {
-//         id:  id,
-//         iat:  Date.now()
-//     }
-
-//     const expiresIn = Date.now() + 10800000; // 3 hours
-//     const options = {
-//         algorithm:  "HS256"
-//     };
-
-//     const tokenForPassword = jwt.sign(claims, config.secret, options);
-    
-//     await db.collection("create_password_tokens").insertOne({
-//         id: id,
-//         token: tokenForPassword,
-//         expiresIn: expiresIn
-//     });
-
-//     user["tokenForPassword"] = tokenForPassword;        
-// });
-
-// describe('#Token tests', function() {
-//     it('## Should 200 (correct token)', async function() {
-//         const password = "password_of_user_123456%$3!@!sSS";
+// describe('#Create Password', function() {
+//     it('## Should 404 (no body)', async function() {
 //         const response = await fetch('https://api.kompar.se/test/password', {
-//                 method: 'post',
-//                 body:    JSON.stringify({ 
-//                     "password": password,
-//                     "token": user["tokenForPassword"]
-//                 }),
-//                 headers: { "Content-type": "application/json" }
-//             })
-//         expect(response.status).to.equal(200);
-//         const json = await response.json();
-//         expect(json.message).to.equal("Password has been created. You can close the page.");
-//         user["password"] = password;
-//     })
-//     it('## Should 404 (no get but post)', async function() {
-//         const response = await fetch('https://api.kompar.se/test/token', {
-//             method: 'post'
+//             method: 'post',
+//             headers: { "Content-type": "application/json" }
 //         })
 //         expect(response.status).to.equal(404);
 //     });
-//     it('## Should 404 (no headers)', async function() {
-//         const response = await fetch('https://api.kompar.se/test/token', {
-//             method: 'get'
+//     it('## Should 404 (no password)', async function() {
+//         const response = await fetch('https://api.kompar.se/test/password', {
+//             method: 'post',
+//             body:    JSON.stringify({ "token": "any token" }),
+//             headers: { "Content-type": "application/json" }
 //         })
-//         expect(response.status).to.equal(400);
-//         const json = await response.json();
-//         expect(json.message).to.equal("Missing authorization header.");
+//         expect(response.status).to.equal(404);
 //     });
-//     it('## Should 404 (wrong authorization header)', async function() {
-//         const response = await fetch('https://api.kompar.se/test/token', {
-//             method: 'get',
-//             headers: {
-//                 "Authorization": "any"
-//             }
+//     it('## Should 404 (no token)', async function() {
+//         const response = await fetch('https://api.kompar.se/test/password', {
+//             method: 'post',
+//             body:    JSON.stringify({ "password": "any password" }),
+//             headers: { "Content-type": "application/json" }
 //         })
-//         expect(response.status).to.equal(400);
-//         const json = await response.json();
-//         expect(json.message).to.equal("Missing authorization header.");
+//         expect(response.status).to.equal(404);
 //     });
-//     it('## Should 404 (Invalid credentials - no in database)', async function() {
-//         const response = await fetch('https://api.kompar.se/test/token', {
-//             method: 'get',
-//             headers: {
-//                 "Authorization": "Basic any:any"
-//             }
+//     it('## Should 404 (wrong token)', async function() {
+//         const response = await fetch('https://api.kompar.se/test/password', {
+//             method: 'post',
+//             body:    JSON.stringify({ 
+//                 "password": "any password",
+//                 "token": "any_token"
+//             }),
+//             headers: { "Content-type": "application/json" }
 //         })
-//         expect(response.status).to.equal(400);
-//         const json = await response.json();
-//         expect(json.message).to.equal("Invalid credentials.");
+//         expect(response.status).to.equal(404);
 //     });
-//     it('## Should 404 (Invalid credentials - wrong pbkdf2Sync)', async function() {
-//         const auth = new Buffer(`${user.login}:any`).toString('base64');
-//         const response = await fetch('https://api.kompar.se/test/token', {
-//             method: 'get',
-//             headers: {
-//                 "Authorization": `Basic ${auth}`
-//             }
+//     it('## Should 404 (wrong token - invalid signature)', async function() {
+//         const id = uuidv4();
+        
+//         const claims = {
+//             id:  id,
+//             iat:  Date.now()
+//         }
+
+//         const options = {
+//             algorithm:  "HS256"
+//         };
+
+//         const token = jwt.sign(claims, "any_secret", options);
+
+//         const response = await fetch('https://api.kompar.se/test/password', {
+//             method: 'post',
+//             body:    JSON.stringify({ 
+//                 "password": "any password",
+//                 "token": token
+//             }),
+//             headers: { "Content-type": "application/json" }
 //         })
-//         expect(response.status).to.equal(400);
-//         const json = await response.json();
-//         expect(json.message).to.equal("Invalid credentials.");
+//         expect(response.status).to.equal(404);
 //     });
-//     it('## Should 200 (Correct credentials - token returned)', async function() {
-//         const auth = new Buffer(`${user.login}:${user.password}`).toString('base64');
-//         const response = await fetch('https://api.kompar.se/test/token', {
-//             method: 'get',
-//             headers: {
-//                 "Authorization": `Basic ${auth}`
-//             }
+//     it('## Should 401 (wrong token - no in database)', async function() {
+//         const id = uuidv4();
+        
+//         const claims = {
+//             id:  id,
+//             iat:  Date.now()
+//         }
+
+//         const options = {
+//             algorithm:  "HS256"
+//         };
+
+//         const token = jwt.sign(claims, config.secret, options);
+
+//         const response = await fetch('https://api.kompar.se/test/password', {
+//             method: 'post',
+//             body:    JSON.stringify({ 
+//                 "password": "any password",
+//                 "token": token
+//             }),
+//             headers: { "Content-type": "application/json" }
 //         })
 //         expect(response.status).to.equal(200);
 //         const json = await response.json();
-//         expect(json.success).to.equal(true);
+//         expect(json.message).to.equal("You have no permission to change password.");
 //     });
+//     describe("", async function() {
+//         const id = uuidv4();
+            
+//         const claims = {
+//             id:  id,
+//             iat:  Date.now()
+//         }
+    
+//         const options = {
+//             algorithm:  "HS256"
+//         };
+    
+//         const token = jwt.sign(claims, config.secret, options);
+
+//         before(async function() {
+//             await db.collection("create_password_tokens").insertOne({
+//                 id: id,
+//                 token: token,
+//                 expiresIn: Date.now() - 100000
+//             });
+//         })
+//         it('## Should 401 (wrong token - expired)', async function() {
+//             const response = await fetch('https://api.kompar.se/test/password', {
+//                 method: 'post',
+//                 body:    JSON.stringify({ 
+//                     "password": "any password",
+//                     "token": token
+//                 }),
+//                 headers: { "Content-type": "application/json" }
+//             })
+//             expect(response.status).to.equal(200);
+//             const json = await response.json();
+//             expect(json.message).to.equal("Token is expired.");
+//         });
+//     })
+//     describe("", async function() {
+//         const id = uuidv4();
+            
+//         const claims = {
+//             id:  id,
+//             iat:  Date.now()
+//         }
+    
+//         const options = {
+//             algorithm:  "HS256"
+//         };
+    
+//         const token = jwt.sign(claims, config.secret, options);
+
+//         before(async function() {
+//             await db.collection("create_password_tokens").insertOne({
+//                 id: id,
+//                 token: token,
+//                 expiresIn: Date.now() + 60000000
+//             });
+//         })
+//         it('## Should 200 (correct token)', async function() {
+//             const response = await fetch('https://api.kompar.se/test/password', {
+//                 method: 'post',
+//                 body:    JSON.stringify({ 
+//                     "password": "any password",
+//                     "token": token
+//                 }),
+//                 headers: { "Content-type": "application/json" }
+//             })
+//             expect(response.status).to.equal(200);
+//             const json = await response.json();
+//             expect(json.message).to.equal("Password has been created. You can close the page.");
+//         });
+//     })
 // });
+
+const user = {};
+
+before(async function() {
+    const id = uuidv4();
+    const random = `User ${Math.random()}`;
+
+    const name = random;
+    const login = random;
+
+    const key = crypto.randomBytes(16).toString('hex');
+    const auth = crypto.randomBytes(32).toString('hex');
+
+    await db.collection("clients").insertOne({
+        id: id,
+        name: name,
+        login: login,
+        key: key,
+        auth: auth
+    });
+
+    user["id"] = id;
+    user["login"] = login;
+
+    console.log(`User - id: ${id}, name: ${name}, login: ${login} has been added.`);
+    usersToRemove.push(id);
+    webhooksToRemove.push(id);
+    
+    const claims = {
+        id:  id,
+        iat:  Date.now()
+    }
+
+    const expiresIn = Date.now() + 10800000; // 3 hours
+    const options = {
+        algorithm:  "HS256"
+    };
+
+    const tokenForPassword = jwt.sign(claims, config.secret, options);
+    
+    await db.collection("create_password_tokens").insertOne({
+        id: id,
+        token: tokenForPassword,
+        expiresIn: expiresIn
+    });
+
+    user["tokenForPassword"] = tokenForPassword;
+});
+
+describe('#Token tests', function() {
+    it('## Should 200 (correct token)', async function() {
+        const password = "password_of_user_123456%$3!@!sSS";
+        const response = await fetch('https://api.kompar.se/test/password', {
+                method: 'post',
+                body:    JSON.stringify({ 
+                    "password": password,
+                    "token": user["tokenForPassword"]
+                }),
+                headers: { "Content-type": "application/json" }
+            })
+        expect(response.status).to.equal(200);
+        const json = await response.json();
+        expect(json.message).to.equal("Password has been created. You can close the page.");
+        user["password"] = password;
+    })
+    it('## Should 404 (no get but post)', async function() {
+        const response = await fetch('https://api.kompar.se/test/token', {
+            method: 'post'
+        })
+        expect(response.status).to.equal(404);
+    });
+    it('## Should 404 (no headers)', async function() {
+        const response = await fetch('https://api.kompar.se/test/token', {
+            method: 'get'
+        })
+        expect(response.status).to.equal(400);
+        const json = await response.json();
+        expect(json.message).to.equal("Missing authorization header.");
+    });
+    it('## Should 404 (wrong authorization header)', async function() {
+        const response = await fetch('https://api.kompar.se/test/token', {
+            method: 'get',
+            headers: {
+                "Authorization": "any"
+            }
+        })
+        expect(response.status).to.equal(400);
+        const json = await response.json();
+        expect(json.message).to.equal("Missing authorization header.");
+    });
+    it('## Should 404 (Invalid credentials - no in database)', async function() {
+        const response = await fetch('https://api.kompar.se/test/token', {
+            method: 'get',
+            headers: {
+                "Authorization": "Basic any:any"
+            }
+        })
+        expect(response.status).to.equal(400);
+        const json = await response.json();
+        expect(json.message).to.equal("Invalid credentials.");
+    });
+    it('## Should 404 (Invalid credentials - wrong pbkdf2Sync)', async function() {
+        const auth = new Buffer(`${user.login}:any`).toString('base64');
+        const response = await fetch('https://api.kompar.se/test/token', {
+            method: 'get',
+            headers: {
+                "Authorization": `Basic ${auth}`
+            }
+        })
+        expect(response.status).to.equal(400);
+        const json = await response.json();
+        expect(json.message).to.equal("Invalid credentials.");
+    });
+    it('## Should 200 (Correct credentials - token returned)', async function() {
+        const auth = new Buffer(`${user.login}:${user.password}`).toString('base64');
+        const response = await fetch('https://api.kompar.se/test/token', {
+            method: 'get',
+            headers: {
+                "Authorization": `Basic ${auth}`
+            }
+        })
+        expect(response.status).to.equal(200);
+        const json = await response.json();
+        expect(json.success).to.equal(true);
+    });
+});
 
 // describe('#Authentication tests', function() {
 //     it('## Should 401 (no header)', async function() {
