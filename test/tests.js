@@ -23,7 +23,7 @@ fetch('https://api-automatic-testing.herokuapp.com/init', {
 
 before(function(done) {
     this.timeout(5000);
-    setTimeout(5000, done());
+    setTimeout(done(),5000);
 });
 
 before(function(done) {
@@ -240,7 +240,7 @@ before(async function() {
 });
 
 describe('#Token tests', function() {
-    it('## Should 200 (correct token)', async function() {
+    it('## Should 200 (correct password token)', async function() {
         const password = "password_of_user_123456%$3!@!sSS";
         const response = await fetch('https://api.kompar.se/test/password', {
                 method: 'post',
@@ -524,7 +524,15 @@ describe('#Authentication tests', function() {
                 }
             );
         });
+        before(function(done) {
+            this.timeout(30000);
+            console.log( Date.now() - 1000000);
+            console.log(Date.now());
+            
+            setTimeout(done(), 29000);
+        })
         it('## Should 401 (Token is expired)', async function() {
+            
             const response2 = await fetch('https://api.kompar.se/test/webhooks/applications', {
                 method: 'POST',
                 headers: { "Authorization": user["token"] }
