@@ -101,7 +101,7 @@ describe('#Create Password', function() {
         const response = await fetch('https://api.kompar.se/test/password', {
             method: 'post',
             body:    JSON.stringify({ 
-                "password": "any password",
+                "password": "any valid_password_1W!",
                 "token": "any_token"
             }),
             headers: { "Content-type": "application/json" }
@@ -125,7 +125,7 @@ describe('#Create Password', function() {
         const response = await fetch('https://api.kompar.se/test/password', {
             method: 'post',
             body:    JSON.stringify({ 
-                "password": "any password",
+                "password": "any valid_password_1W!",
                 "token": token
             }),
             headers: { "Content-type": "application/json" }
@@ -149,7 +149,7 @@ describe('#Create Password', function() {
         const response = await fetch('https://api.kompar.se/test/password', {
             method: 'post',
             body:    JSON.stringify({ 
-                "password": "any password",
+                "password": "any valid_password_1W!",
                 "token": token
             }),
             headers: { "Content-type": "application/json" }
@@ -183,7 +183,7 @@ describe('#Create Password', function() {
             const response = await fetch('https://api.kompar.se/test/password', {
                 method: 'post',
                 body:    JSON.stringify({ 
-                    "password": "any password",
+                    "password": "any valid_password_1W!",
                     "token": token
                 }),
                 headers: { "Content-type": "application/json" }
@@ -218,7 +218,7 @@ describe('#Create Password', function() {
             const response = await fetch('https://api.kompar.se/test/password', {
                 method: 'post',
                 body:    JSON.stringify({ 
-                    "password": "any password",
+                    "password": "any valid_password_1W!",
                     "token": token
                 }),
                 headers: { "Content-type": "application/json" }
@@ -253,7 +253,6 @@ before(async function() {
     user["id"] = id;
     user["login"] = login;
 
-    console.log(`User - id: ${id}, name: ${name}, login: ${login} has been added.`);
     usersToRemove.push(id);
     webhooksToRemove.push(id);
     
@@ -308,11 +307,33 @@ describe('#Token tests', function() {
         const json = await response.json();
         expect(json.message).to.equal("Missing authorization header.");
     });
+    it('## Should 404 (no authorization header)', async function() {
+        const response = await fetch('https://api.kompar.se/test/token', {
+            method: 'get',
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+        expect(response.status).to.equal(400);
+        const json = await response.json();
+        expect(json.message).to.equal("Missing authorization header.");
+    });
     it('## Should 404 (wrong authorization header)', async function() {
         const response = await fetch('https://api.kompar.se/test/token', {
             method: 'get',
             headers: {
                 "Authorization": "any"
+            }
+        })
+        expect(response.status).to.equal(400);
+        const json = await response.json();
+        expect(json.message).to.equal("Missing authorization header.");
+    });
+    it('## Should 404 (no Basic token)', async function() {
+        const response = await fetch('https://api.kompar.se/test/token', {
+            method: 'get',
+            headers: {
+                "Authorization": "Bearer any:any"
             }
         })
         expect(response.status).to.equal(400);
@@ -376,6 +397,16 @@ describe('#Authentication tests', function() {
         expect(json.success).to.equal(false);
         expect(json.message).to.equal("Authorization not provided.");  
         
+    });
+    it('## Should 401 (wrong authorization Basic but should be Bearer)', async function() {
+        const response = await fetch('https://api.kompar.se/test/webhooks/applications', {
+            method: 'POST',
+            headers: { "Authorization": "Basic any" }
+        })
+        expect(response.status).to.equal(401);
+        const json = await response.json();
+        expect(json.success).to.equal(false);
+        expect(json.message).to.equal("Authorization not provided.");  
     });
     it('## Should 401 (wrong authorization Bearer)', async function() {
         const response = await fetch('https://api.kompar.se/test/webhooks/applications', {
@@ -454,7 +485,7 @@ describe('#Authentication tests', function() {
         });
         it('## Should 401 (no client with this id)', async function() {
             // now he has correct token, which will be validated but isn't in database
-            this.timeout(3000);
+            this.timeout(5000);
             const response2 = await fetch('https://api.kompar.se/test/webhooks/applications', {
                 method: 'POST',
                 headers: { "Authorization": token }
@@ -599,6 +630,20 @@ describe('#Webhook tests', async function() {
         const json2 = await response2.json();
         expect(json2.success).to.equal(false);
         expect(json2.message).to.equal("You have to provide url.");  
+    });
+    it('## Should 404 (url not string)', async function() {
+        const response2 = await fetch('https://api.kompar.se/test/webhooks/applications', {
+            method: 'POST',
+            headers: { 
+                "Authorization": user["token"],
+                "Content-Type": "application/json" 
+            },
+            body: JSON.stringify({ "url": 1 })
+        })
+        expect(response2.status).to.equal(404);
+        const json2 = await response2.json();
+        expect(json2.success).to.equal(false);
+        expect(json2.message).to.equal("Url has to be string.");  
     });
     it('## Should 404 (no random unvalid url)', async function() {
         const response2 = await fetch('https://api.kompar.se/test/webhooks/applications', {
