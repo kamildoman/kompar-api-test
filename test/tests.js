@@ -58,6 +58,45 @@ describe('#Create Password', function() {
         })
         expect(response.status).to.equal(404);
     });
+    it('## Should 404 (password not string)', async function() {
+        const response = await fetch('https://api.kompar.se/test/password', {
+            method: 'post',
+            body:    JSON.stringify({ 
+                "password": 1,
+                "token": "any_token"
+            }),
+            headers: { "Content-type": "application/json" }
+        })
+        expect(response.status).to.equal(200);
+        const json = await response.json();
+        expect(json.message).to.equal("Password has to be string.");
+    });
+    it('## Should 404 (token not string)', async function() {
+        const response = await fetch('https://api.kompar.se/test/password', {
+            method: 'post',
+            body:    JSON.stringify({ 
+                "password": "any_password",
+                "token": 1
+            }),
+            headers: { "Content-type": "application/json" }
+        })
+        expect(response.status).to.equal(200);
+        const json = await response.json();
+        expect(json.message).to.equal("Token has to be string.");
+    });
+    it('## Should 404 (password not valid)', async function() {
+        const response = await fetch('https://api.kompar.se/test/password', {
+            method: 'post',
+            body:    JSON.stringify({ 
+                "password": "any_password",
+                "token": "any_token"
+            }),
+            headers: { "Content-type": "application/json" }
+        })
+        expect(response.status).to.equal(200);
+        const json = await response.json();
+        expect(json.message).to.equal("The password must contains at least 1 lower case letter, 1 upper case letter, 1 numeric character and 1 special character");
+    });
     it('## Should 404 (wrong token)', async function() {
         const response = await fetch('https://api.kompar.se/test/password', {
             method: 'post',
@@ -524,15 +563,7 @@ describe('#Authentication tests', function() {
                 }
             );
         });
-        before(function(done) {
-            this.timeout(30000);
-            console.log( Date.now() - 1000000);
-            console.log(Date.now());
-            
-            setTimeout(done(), 29000);
-        })
         it('## Should 401 (Token is expired)', async function() {
-            
             const response2 = await fetch('https://api.kompar.se/test/webhooks/applications', {
                 method: 'POST',
                 headers: { "Authorization": user["token"] }
