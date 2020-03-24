@@ -21,9 +21,13 @@ fetch('https://api-automatic-testing.herokuapp.com/init', {
     method: 'get'
 })
 
+console.log("init start")
 before(function(done) {
-    this.timeout(5000);
-    setTimeout(done(),5000);
+    this.timeout(10000);
+    setTimeout(function(){
+        console.log("init finished")
+        done();
+    },9500);
 });
 
 before(function(done) {
@@ -178,7 +182,7 @@ before(function(done) {
 //                 token: token,
 //                 expiresIn: Date.now() - 100000
 //             });
-//         })
+//         });
 //         it('## Should 401 (wrong token - expired)', async function() {
 //             const response = await fetch('https://api.kompar.se/test/password', {
 //                 method: 'post',
@@ -192,7 +196,7 @@ before(function(done) {
 //             const json = await response.json();
 //             expect(json.message).to.equal("Token is expired.");
 //         });
-//     })
+//     });
 //     describe("", async function() {
 //         const id = uuidv4();
             
@@ -227,7 +231,7 @@ before(function(done) {
 //             const json = await response.json();
 //             expect(json.message).to.equal("Password has been created. You can close the page.");
 //         });
-//     })
+//     });
 // });
 
 const user = {};
@@ -277,105 +281,105 @@ before(async function() {
     user["tokenForPassword"] = tokenForPassword;
 });
 
-describe('#Token tests', function() {
-    it('## Should 200 (correct password token)', async function() {
-        const password = "password_of_user_123456%$3!@!sSS";
-        const response = await fetch('https://api.kompar.se/test/password', {
-                method: 'post',
-                body:    JSON.stringify({ 
-                    "password": password,
-                    "token": user["tokenForPassword"]
-                }),
-                headers: { "Content-type": "application/json" }
-            })
-        expect(response.status).to.equal(200);
-        const json = await response.json();
-        expect(json.message).to.equal("Password has been created. You can close the page.");
-        user["password"] = password;
-    })
-    it('## Should 404 (no get but post)', async function() {
-        const response = await fetch('https://api.kompar.se/test/token', {
-            method: 'post'
-        })
-        expect(response.status).to.equal(404);
-    });
-    it('## Should 404 (no headers)', async function() {
-        const response = await fetch('https://api.kompar.se/test/token', {
-            method: 'get'
-        })
-        expect(response.status).to.equal(400);
-        const json = await response.json();
-        expect(json.message).to.equal("Missing authorization header.");
-    });
-    it('## Should 404 (no authorization header)', async function() {
-        const response = await fetch('https://api.kompar.se/test/token', {
-            method: 'get',
-            headers: {
-                "Content-Type": "application/json"
-            }
-        })
-        expect(response.status).to.equal(400);
-        const json = await response.json();
-        expect(json.message).to.equal("Missing authorization header.");
-    });
-    it('## Should 404 (wrong authorization header)', async function() {
-        const response = await fetch('https://api.kompar.se/test/token', {
-            method: 'get',
-            headers: {
-                "Authorization": "any"
-            }
-        })
-        expect(response.status).to.equal(400);
-        const json = await response.json();
-        expect(json.message).to.equal("Missing authorization header.");
-    });
-    it('## Should 404 (no Basic token)', async function() {
-        const response = await fetch('https://api.kompar.se/test/token', {
-            method: 'get',
-            headers: {
-                "Authorization": "Bearer any:any"
-            }
-        })
-        expect(response.status).to.equal(400);
-        const json = await response.json();
-        expect(json.message).to.equal("Missing authorization header.");
-    });
-    it('## Should 404 (Invalid credentials - no in database)', async function() {
-        const response = await fetch('https://api.kompar.se/test/token', {
-            method: 'get',
-            headers: {
-                "Authorization": "Basic any:any"
-            }
-        })
-        expect(response.status).to.equal(400);
-        const json = await response.json();
-        expect(json.message).to.equal("Invalid credentials.");
-    });
-    it('## Should 404 (Invalid credentials - wrong pbkdf2Sync)', async function() {
-        const auth = new Buffer(`${user.login}:any`).toString('base64');
-        const response = await fetch('https://api.kompar.se/test/token', {
-            method: 'get',
-            headers: {
-                "Authorization": `Basic ${auth}`
-            }
-        })
-        expect(response.status).to.equal(400);
-        const json = await response.json();
-        expect(json.message).to.equal("Invalid credentials.");
-    });
-    it('## Should 200 (Correct credentials - token returned)', async function() {
-        const auth = new Buffer(`${user.login}:${user.password}`).toString('base64');
-        const response = await fetch('https://api.kompar.se/test/token', {
-            method: 'get',
-            headers: {
-                "Authorization": `Basic ${auth}`
-            }
-        })
-        expect(response.status).to.equal(200);
-        const json = await response.json();
-        expect(json.success).to.equal(true);
-    });
-});
+// describe('#Token tests', function() {
+//     it('## Should 200 (correct password token)', async function() {
+//         const password = "password_of_user_123456%$3!@!sSS";
+//         const response = await fetch('https://api.kompar.se/test/password', {
+//                 method: 'post',
+//                 body:    JSON.stringify({ 
+//                     "password": password,
+//                     "token": user["tokenForPassword"]
+//                 }),
+//                 headers: { "Content-type": "application/json" }
+//             })
+//         expect(response.status).to.equal(200);
+//         const json = await response.json();
+//         expect(json.message).to.equal("Password has been created. You can close the page.");
+//         user["password"] = password;
+//     });
+//     it('## Should 404 (no get but post)', async function() {
+//         const response = await fetch('https://api.kompar.se/test/token', {
+//             method: 'post'
+//         })
+//         expect(response.status).to.equal(404);
+//     });
+//     it('## Should 404 (no headers)', async function() {
+//         const response = await fetch('https://api.kompar.se/test/token', {
+//             method: 'get'
+//         })
+//         expect(response.status).to.equal(400);
+//         const json = await response.json();
+//         expect(json.message).to.equal("Missing authorization header.");
+//     });
+//     it('## Should 404 (no authorization header)', async function() {
+//         const response = await fetch('https://api.kompar.se/test/token', {
+//             method: 'get',
+//             headers: {
+//                 "Content-Type": "application/json"
+//             }
+//         })
+//         expect(response.status).to.equal(400);
+//         const json = await response.json();
+//         expect(json.message).to.equal("Missing authorization header.");
+//     });
+//     it('## Should 404 (wrong authorization header)', async function() {
+//         const response = await fetch('https://api.kompar.se/test/token', {
+//             method: 'get',
+//             headers: {
+//                 "Authorization": "any"
+//             }
+//         })
+//         expect(response.status).to.equal(400);
+//         const json = await response.json();
+//         expect(json.message).to.equal("Missing authorization header.");
+//     });
+//     it('## Should 404 (no Basic token)', async function() {
+//         const response = await fetch('https://api.kompar.se/test/token', {
+//             method: 'get',
+//             headers: {
+//                 "Authorization": "Bearer any:any"
+//             }
+//         })
+//         expect(response.status).to.equal(400);
+//         const json = await response.json();
+//         expect(json.message).to.equal("Missing authorization header.");
+//     });
+//     it('## Should 404 (Invalid credentials - no in database)', async function() {
+//         const response = await fetch('https://api.kompar.se/test/token', {
+//             method: 'get',
+//             headers: {
+//                 "Authorization": "Basic any:any"
+//             }
+//         })
+//         expect(response.status).to.equal(400);
+//         const json = await response.json();
+//         expect(json.message).to.equal("Invalid credentials.");
+//     });
+//     it('## Should 404 (Invalid credentials - wrong pbkdf2Sync)', async function() {
+//         const auth = new Buffer(`${user.login}:any`).toString('base64');
+//         const response = await fetch('https://api.kompar.se/test/token', {
+//             method: 'get',
+//             headers: {
+//                 "Authorization": `Basic ${auth}`
+//             }
+//         })
+//         expect(response.status).to.equal(400);
+//         const json = await response.json();
+//         expect(json.message).to.equal("Invalid credentials.");
+//     });
+//     it('## Should 200 (Correct credentials - token returned)', async function() {
+//         const auth = new Buffer(`${user.login}:${user.password}`).toString('base64');
+//         const response = await fetch('https://api.kompar.se/test/token', {
+//             method: 'get',
+//             headers: {
+//                 "Authorization": `Basic ${auth}`
+//             }
+//         })
+//         expect(response.status).to.equal(200);
+//         const json = await response.json();
+//         expect(json.success).to.equal(true);
+//     });
+// });
 
 // // describe('#Authentication tests', function() {
 // //     it('## Should 401 (no header)', async function() {
@@ -762,54 +766,632 @@ describe('#Token tests', function() {
 //     });
 // });
 
+// describe('#Webhook send application to lenders test', async function() {
+//     describe("", async function() {
+//         before(async function() {
+//             const auth = new Buffer(`${user.login}:${user.password}`).toString('base64');
+//             const response = await fetch('https://api.kompar.se/test/token', {
+//                 method: 'get',
+//                 headers: {
+//                     "Authorization": `Basic ${auth}`
+//                 }
+//             })
+//             const json = await response.json();
+//             user["token"] = `${json.token_type} ${json.token}`;
+//         });
+//         before(async function() {
+//             await db.collection("applications").updateOne(
+//                 { id: "test_1_application_1" }, { 
+//                     $set: { 
+//                         sentViaWebhook: false
+//                     }
+//                 }
+//             );
+//         });
+//         before(async function() {
+//             await fetch('https://api.kompar.se/test/webhooks/applications', {
+//                 method: 'DELETE',
+//                 headers: { 
+//                     "Authorization": user["token"]
+//                 }
+//             })
+//         });
+//         before(async function() {
+//             await fetch('https://api.kompar.se/test/webhooks/applications', {
+//                 method: 'POST',
+//                 headers: { 
+//                     "Authorization": user["token"],
+//                     "Content-Type": "application/json"
+//                 },
+//                 body: JSON.stringify({"url": "https://api-automatic-testing.herokuapp.com/test1/application"})
+//             })
+//         });
+//         before(async function() {
+//             await fetch('https://api.kompar.se/test/send/webhooks/application', {
+//                 method: 'POST',
+//                 headers: {
+//                     "Authorization": config.auth_bubble_1,
+//                     "Content-Type": "application/json"
+//                 }, body: JSON.stringify({
+//                     "id": "test_1_application_1"
+//                 })
+//             })
+//         });
+//         it('## First url should return 200 and be confirmed', async function() {
+//             const application = await db.collection("applications").findOne( { id: "test_1_application_1" });
+//             expect(application.webhooks[0].confirmed).to.equal(true);
+//         });
+//     });
+//     describe("", async function() {
+//         before(async function() {
+//             await db.collection("applications").updateOne(
+//                 { id: "test_1_application_1" }, { 
+//                     $set: { 
+//                         sentViaWebhook: false
+//                     }
+//                 }
+//             );
+//         });
+//         before(async function() {
+//             await fetch('https://api.kompar.se/test/webhooks/applications', {
+//                 method: 'DELETE',
+//                 headers: { 
+//                     "Authorization": user["token"]
+//                 }
+//             })
+//         });
+//         before(async function() {
+//             await fetch('https://api.kompar.se/test/webhooks/applications', {
+//                 method: 'POST',
+//                 headers: { 
+//                     "Authorization": user["token"],
+//                     "Content-Type": "application/json"
+//                 },
+//                 body: JSON.stringify({"url": "https://api-automatic-testing.herokuapp.com/test2/application"})
+//             })
+//         });
+//         before(async function() {
+//             await fetch('https://api.kompar.se/test/send/webhooks/application', {
+//                 method: 'POST',
+//                 headers: {
+//                     "Authorization": config.auth_bubble_1,
+//                     "Content-Type": "application/json"
+//                 }, body: JSON.stringify({
+//                     "id": "test_1_application_1"
+//                 })
+//             })
+//         });
+//         before(function(done) {
+//             // we need to do timeout, because it will take some time for the second attempt
+//             this.timeout(5000);
+//             setTimeout(function() {
+//                 done();
+//             }, 4000);
+//         });
+//         it('## Second url should return 200 on second attempt and be confirmed', async function() {
+//             const application = await db.collection("applications").findOne( { id: "test_1_application_1" });
+//             expect(application.webhooks[0].confirmed).to.equal(true);
+//         });
+//     });
+//     describe("", async function() {
+//         before(async function() {
+//             await db.collection("applications").updateOne(
+//                 { id: "test_1_application_1" }, { 
+//                     $set: { 
+//                         sentViaWebhook: false
+//                     }
+//                 }
+//             );
+//         });
+//         before(async function() {
+//             await fetch('https://api.kompar.se/test/webhooks/applications', {
+//                 method: 'DELETE',
+//                 headers: { 
+//                     "Authorization": user["token"]
+//                 }
+//             })
+//         });
+//         before(async function() {
+//             await fetch('https://api.kompar.se/test/webhooks/applications', {
+//                 method: 'POST',
+//                 headers: { 
+//                     "Authorization": user["token"],
+//                     "Content-Type": "application/json"
+//                 },
+//                 body: JSON.stringify({"url": "https://api-automatic-testing.herokuapp.com/test3/application"})
+//             })
+//         });
+//         before(async function() {
+//             await fetch('https://api.kompar.se/test/send/webhooks/application', {
+//                 method: 'POST',
+//                 headers: {
+//                     "Authorization": config.auth_bubble_1,
+//                     "Content-Type": "application/json"
+//                 }, body: JSON.stringify({
+//                     "id": "test_1_application_1"
+//                 })
+//             })
+//         });
+//         before(function(done) {
+//             // we need to do timeout, because it will take some time for the second attempt
+//             this.timeout(7000);
+//             setTimeout(function() {
+//                 done();
+//             }, 6000);
+//         });
+//         it('## Third url should return 200 on third attempt and be confirmed', async function() {
+//             const application = await db.collection("applications").findOne( { id: "test_1_application_1" });
+//             expect(application.webhooks[0].confirmed).to.equal(true);
+//         });
+//     });
+//     describe("", async function() {
+//         before(async function() {
+//             await db.collection("applications").updateOne(
+//                 { id: "test_1_application_1" }, { 
+//                     $set: { 
+//                         sentViaWebhook: false
+//                     }
+//                 }
+//             );
+//         });
+//         before(async function() {
+//             await fetch('https://api.kompar.se/test/webhooks/applications', {
+//                 method: 'DELETE',
+//                 headers: { 
+//                     "Authorization": user["token"]
+//                 }
+//             })
+//         });
+//         before(async function() {
+//             await fetch('https://api.kompar.se/test/webhooks/applications', {
+//                 method: 'POST',
+//                 headers: { 
+//                     "Authorization": user["token"],
+//                     "Content-Type": "application/json"
+//                 },
+//                 body: JSON.stringify({"url": "https://api-automatic-testing.herokuapp.com/test4/application"})
+//             })
+//         });
+//         before(async function() {
+//             await fetch('https://api.kompar.se/test/send/webhooks/application', {
+//                 method: 'POST',
+//                 headers: {
+//                     "Authorization": config.auth_bubble_1,
+//                     "Content-Type": "application/json"
+//                 }, body: JSON.stringify({
+//                     "id": "test_1_application_1"
+//                 })
+//             })
+//         });
+//         before(function(done) {
+//             // we need to do timeout, because it will take some time for the second attempt
+//             this.timeout(9000);
+//             setTimeout(function() {
+//                 done();
+//             }, 8000);
+//         });
+//         it('## Fourth url should return 200 on fourth attempt and be confirmed', async function() {
+//             const application = await db.collection("applications").findOne( { id: "test_1_application_1" });
+//             expect(application.webhooks[0].confirmed).to.equal(true);
+//         });
+//     });
+//     describe("", async function() {
+//         before(async function() {
+//             await db.collection("applications").updateOne(
+//                 { id: "test_1_application_1" }, { 
+//                     $set: { 
+//                         sentViaWebhook: false
+//                     }
+//                 }
+//             );
+//         });
+//         before(async function() {
+//             await fetch('https://api.kompar.se/test/webhooks/applications', {
+//                 method: 'DELETE',
+//                 headers: { 
+//                     "Authorization": user["token"]
+//                 }
+//             })
+//         });
+//         before(async function() {
+//             await fetch('https://api.kompar.se/test/webhooks/applications', {
+//                 method: 'POST',
+//                 headers: { 
+//                     "Authorization": user["token"],
+//                     "Content-Type": "application/json"
+//                 },
+//                 body: JSON.stringify({"url": "https://api-automatic-testing.herokuapp.com/test5/application"})
+//             })
+//         });
+//         before(async function() {
+//             await fetch('https://api.kompar.se/test/send/webhooks/application', {
+//                 method: 'POST',
+//                 headers: {
+//                     "Authorization": config.auth_bubble_1,
+//                     "Content-Type": "application/json"
+//                 }, body: JSON.stringify({
+//                     "id": "test_1_application_1"
+//                 })
+//             })
+//         });
+//         before(function(done) {
+//             // we need to do timeout, because it will take some time for the second attempt
+//             this.timeout(9000);
+//             setTimeout(function() {
+//                 done();
+//             }, 8000);
+//         });
+//         it('## Fifth url should return 200 on fifth attempt and be confirmed', async function() {
+//             const application = await db.collection("applications").findOne( { id: "test_1_application_1" });
+//             expect(application.webhooks[0].confirmed).to.equal(true);
+//         });
+//     });
+//     describe("", async function() {
+//         before(async function() {
+//             await db.collection("applications").updateOne(
+//                 { id: "test_1_application_1" }, { 
+//                     $set: { 
+//                         sentViaWebhook: false
+//                     }
+//                 }
+//             );
+//         });
+//         before(async function() {
+//             await fetch('https://api.kompar.se/test/webhooks/applications', {
+//                 method: 'DELETE',
+//                 headers: { 
+//                     "Authorization": user["token"]
+//                 }
+//             })
+//         });
+//         before(async function() {
+//             await fetch('https://api.kompar.se/test/webhooks/applications', {
+//                 method: 'POST',
+//                 headers: { 
+//                     "Authorization": user["token"],
+//                     "Content-Type": "application/json"
+//                 },
+//                 body: JSON.stringify({"url": "https://api-automatic-testing.herokuapp.com/test6/application"})
+//             })
+//         });
+//         before(async function() {
+//             await fetch('https://api.kompar.se/test/send/webhooks/application', {
+//                 method: 'POST',
+//                 headers: {
+//                     "Authorization": config.auth_bubble_1,
+//                     "Content-Type": "application/json"
+//                 }, body: JSON.stringify({
+//                     "id": "test_1_application_1"
+//                 })
+//             })
+//         });
+//         before(function(done) {
+//             // we need to do timeout, because it will take some time for the second attempt
+//             this.timeout(11000);
+//             setTimeout(function() {
+//                 done();
+//             }, 10000);
+//         });
+//         it('## Sixth url should never confirmed', async function() {
+//             const application = await db.collection("applications").findOne( { id: "test_1_application_1" });
+//             expect(application.webhooks[0].confirmed).to.equal(false);
+//             expect(application.webhooks[0].after_resend_not_confirmed).to.equal(true);
+//         });
+//     });
+// });
+
 describe('#Webhook send application to lenders test', async function() {
-    before(async function() {
-        const auth = new Buffer(`${user.login}:${user.password}`).toString('base64');
-        const response = await fetch('https://api.kompar.se/test/token', {
-            method: 'get',
-            headers: {
-                "Authorization": `Basic ${auth}`
-            }
-        })
-        const json = await response.json();
-        user["token"] = `${json.token_type} ${json.token}`;
-    })
-    before(async function() {
-        await fetch('https://api.kompar.se/test/webhooks/applications', {
-            method: 'DELETE',
-            headers: { 
-                "Authorization": user["token"]
-            }
-        })
-    })
-    before(async function() {
-        await fetch('https://api.kompar.se/test/webhooks/applications', {
-            method: 'POST',
-            headers: { 
-                "Authorization": user["token"],
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({"url": "https://api-automatic-testing.herokuapp.com/test1/application"})
-        })
-    })
-    before(async function() {
-        await fetch('https://api.kompar.se/test/send/webhooks/application', {
-            method: 'POST',
-            headers: {
-                "Authorization": config.auth_bubble_1,
-                "Content-Type": "application/json"
-            }, body: JSON.stringify({
-                "id": "test_1_application_1"
+    describe("", async function() {
+        before(async function() {
+            const auth = new Buffer(`${user.login}:${user.password}`).toString('base64');
+            const response = await fetch('https://api.kompar.se/test/token', {
+                method: 'get',
+                headers: {
+                    "Authorization": `Basic ${auth}`
+                }
             })
-        })
-    })
-    it('## First url should return 200', function(done) {
-        this.timeout(2600);
-        setTimeout(function() {
-            
-            done();
-        }, 2500)
-    })
+            const json = await response.json();
+            user["token"] = `${json.token_type} ${json.token}`;
+        });
+        before(async function() {
+            await db.collection("applications").updateOne(
+                { id: "test_1_application_1" }, { 
+                    $set: { 
+                        sentViaWebhook: false
+                    }
+                }
+            );
+        });
+        before(async function() {
+            await fetch('https://api.kompar.se/test/webhooks/applications', {
+                method: 'DELETE',
+                headers: { 
+                    "Authorization": user["token"]
+                }
+            })
+        });
+        before(async function() {
+            await fetch('https://api.kompar.se/test/webhooks/applications', {
+                method: 'POST',
+                headers: { 
+                    "Authorization": user["token"],
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({"url": "https://api-automatic-testing.herokuapp.com/test1/application"})
+            })
+        });
+        before(async function() {
+            await fetch('https://api.kompar.se/test/send/webhooks/application', {
+                method: 'POST',
+                headers: {
+                    "Authorization": config.auth_bubble_1,
+                    "Content-Type": "application/json"
+                }, body: JSON.stringify({
+                    "id": "test_1_application_1"
+                })
+            })
+        });
+        it('## First url should return 200 and be confirmed', async function() {
+            const application = await db.collection("applications").findOne( { id: "test_1_application_1" });
+            expect(application.webhooks[0].confirmed).to.equal(true);
+        });
+    });
+    describe("", async function() {
+        before(async function() {
+            await db.collection("applications").updateOne(
+                { id: "test_1_application_1" }, { 
+                    $set: { 
+                        sentViaWebhook: false
+                    }
+                }
+            );
+        });
+        before(async function() {
+            await fetch('https://api.kompar.se/test/webhooks/applications', {
+                method: 'DELETE',
+                headers: { 
+                    "Authorization": user["token"]
+                }
+            })
+        });
+        before(async function() {
+            await fetch('https://api.kompar.se/test/webhooks/applications', {
+                method: 'POST',
+                headers: { 
+                    "Authorization": user["token"],
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({"url": "https://api-automatic-testing.herokuapp.com/test2/application"})
+            })
+        });
+        before(async function() {
+            await fetch('https://api.kompar.se/test/send/webhooks/application', {
+                method: 'POST',
+                headers: {
+                    "Authorization": config.auth_bubble_1,
+                    "Content-Type": "application/json"
+                }, body: JSON.stringify({
+                    "id": "test_1_application_1"
+                })
+            })
+        });
+        before(function(done) {
+            // we need to do timeout, because it will take some time for the second attempt
+            this.timeout(5000);
+            setTimeout(function() {
+                done();
+            }, 4000);
+        });
+        it('## Second url should return 200 on second attempt and be confirmed', async function() {
+            const application = await db.collection("applications").findOne( { id: "test_1_application_1" });
+            expect(application.webhooks[0].confirmed).to.equal(true);
+        });
+    });
+    describe("", async function() {
+        before(async function() {
+            await db.collection("applications").updateOne(
+                { id: "test_1_application_1" }, { 
+                    $set: { 
+                        sentViaWebhook: false
+                    }
+                }
+            );
+        });
+        before(async function() {
+            await fetch('https://api.kompar.se/test/webhooks/applications', {
+                method: 'DELETE',
+                headers: { 
+                    "Authorization": user["token"]
+                }
+            })
+        });
+        before(async function() {
+            await fetch('https://api.kompar.se/test/webhooks/applications', {
+                method: 'POST',
+                headers: { 
+                    "Authorization": user["token"],
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({"url": "https://api-automatic-testing.herokuapp.com/test3/application"})
+            })
+        });
+        before(async function() {
+            await fetch('https://api.kompar.se/test/send/webhooks/application', {
+                method: 'POST',
+                headers: {
+                    "Authorization": config.auth_bubble_1,
+                    "Content-Type": "application/json"
+                }, body: JSON.stringify({
+                    "id": "test_1_application_1"
+                })
+            })
+        });
+        before(function(done) {
+            // we need to do timeout, because it will take some time for the second attempt
+            this.timeout(7000);
+            setTimeout(function() {
+                done();
+            }, 6000);
+        });
+        it('## Third url should return 200 on third attempt and be confirmed', async function() {
+            const application = await db.collection("applications").findOne( { id: "test_1_application_1" });
+            expect(application.webhooks[0].confirmed).to.equal(true);
+        });
+    });
+    describe("", async function() {
+        before(async function() {
+            await db.collection("applications").updateOne(
+                { id: "test_1_application_1" }, { 
+                    $set: { 
+                        sentViaWebhook: false
+                    }
+                }
+            );
+        });
+        before(async function() {
+            await fetch('https://api.kompar.se/test/webhooks/applications', {
+                method: 'DELETE',
+                headers: { 
+                    "Authorization": user["token"]
+                }
+            })
+        });
+        before(async function() {
+            await fetch('https://api.kompar.se/test/webhooks/applications', {
+                method: 'POST',
+                headers: { 
+                    "Authorization": user["token"],
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({"url": "https://api-automatic-testing.herokuapp.com/test4/application"})
+            })
+        });
+        before(async function() {
+            await fetch('https://api.kompar.se/test/send/webhooks/application', {
+                method: 'POST',
+                headers: {
+                    "Authorization": config.auth_bubble_1,
+                    "Content-Type": "application/json"
+                }, body: JSON.stringify({
+                    "id": "test_1_application_1"
+                })
+            })
+        });
+        before(function(done) {
+            // we need to do timeout, because it will take some time for the second attempt
+            this.timeout(9000);
+            setTimeout(function() {
+                done();
+            }, 8000);
+        });
+        it('## Fourth url should return 200 on fourth attempt and be confirmed', async function() {
+            const application = await db.collection("applications").findOne( { id: "test_1_application_1" });
+            expect(application.webhooks[0].confirmed).to.equal(true);
+        });
+    });
+    describe("", async function() {
+        before(async function() {
+            await db.collection("applications").updateOne(
+                { id: "test_1_application_1" }, { 
+                    $set: { 
+                        sentViaWebhook: false
+                    }
+                }
+            );
+        });
+        before(async function() {
+            await fetch('https://api.kompar.se/test/webhooks/applications', {
+                method: 'DELETE',
+                headers: { 
+                    "Authorization": user["token"]
+                }
+            })
+        });
+        before(async function() {
+            await fetch('https://api.kompar.se/test/webhooks/applications', {
+                method: 'POST',
+                headers: { 
+                    "Authorization": user["token"],
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({"url": "https://api-automatic-testing.herokuapp.com/test5/application"})
+            })
+        });
+        before(async function() {
+            await fetch('https://api.kompar.se/test/send/webhooks/application', {
+                method: 'POST',
+                headers: {
+                    "Authorization": config.auth_bubble_1,
+                    "Content-Type": "application/json"
+                }, body: JSON.stringify({
+                    "id": "test_1_application_1"
+                })
+            })
+        });
+        before(function(done) {
+            // we need to do timeout, because it will take some time for the second attempt
+            this.timeout(9000);
+            setTimeout(function() {
+                done();
+            }, 8000);
+        });
+        it('## Fifth url should return 200 on fifth attempt and be confirmed', async function() {
+            const application = await db.collection("applications").findOne( { id: "test_1_application_1" });
+            expect(application.webhooks[0].confirmed).to.equal(true);
+        });
+    });
+    describe("", async function() {
+        before(async function() {
+            await db.collection("applications").updateOne(
+                { id: "test_1_application_1" }, { 
+                    $set: { 
+                        sentViaWebhook: false
+                    }
+                }
+            );
+        });
+        before(async function() {
+            await fetch('https://api.kompar.se/test/webhooks/applications', {
+                method: 'DELETE',
+                headers: { 
+                    "Authorization": user["token"]
+                }
+            })
+        });
+        before(async function() {
+            await fetch('https://api.kompar.se/test/webhooks/applications', {
+                method: 'POST',
+                headers: { 
+                    "Authorization": user["token"],
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({"url": "https://api-automatic-testing.herokuapp.com/test6/application"})
+            })
+        });
+        before(async function() {
+            await fetch('https://api.kompar.se/test/send/webhooks/application', {
+                method: 'POST',
+                headers: {
+                    "Authorization": config.auth_bubble_1,
+                    "Content-Type": "application/json"
+                }, body: JSON.stringify({
+                    "id": "test_1_application_1"
+                })
+            })
+        });
+        before(function(done) {
+            // we need to do timeout, because it will take some time for the second attempt
+            this.timeout(11000);
+            setTimeout(function() {
+                done();
+            }, 10000);
+        });
+        it('## Sixth url should never confirmed', async function() {
+            const application = await db.collection("applications").findOne( { id: "test_1_application_1" });
+            expect(application.webhooks[0].confirmed).to.equal(false);
+            expect(application.webhooks[0].after_resend_not_confirmed).to.equal(true);
+        });
+    });
 });
 
 after(async function() {

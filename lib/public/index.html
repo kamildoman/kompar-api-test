@@ -45,6 +45,11 @@
                     <div class="dropdown-container" id="MenuDrop5">
                         <a href="#Loan purpose" class="sub" id="Loan_purpose_">Loan purpose</a>
                     </div><hr>
+                    <a href="#How_to_test_Api" class="dropdown-btn" id="How_to_test_Api_">How to test API?<i class="fa fa-caret-down"></i></a>
+                    <div class="dropdown-container" id="MenuDrop6">
+                        <a href="#Get_random_application" class="sub" id="Get_random_application_">Get random application</a>
+                        <a href="#Get_random_decision" class="sub" id="Get_random_decision_">Get random decision</a>
+                    </div><hr>
                     <a class="sub" id="end_"></a>
                 </div>
                 <div class="left_menu_fotter">
@@ -1032,6 +1037,35 @@
                                 <li>Omfinansiering av lån / samla lån</li>
                                 <li>Övrigt</li>
                             </ul>
+                    </div>
+                </div>
+                <div class="section2">
+                    <h1 id="How_to_test_Api">Hot to test API?</h1>
+                    <div class="title">
+                        Test environment which is available after /test path, provides some additional methods to make testing easier. These methods try to simulate the real system. We highly recommend to use them before changing your system to production environment.
+                        <br><br>
+                        All requests require test authentication.
+                    </div>
+                    <div class="message">
+                        <h1 id="Get_random_application">Get random application</h1>
+                        Let's assume you have correctly registered to the application webhook but how to check if application comes correctly to your provided url. This method will send a random fake application to the url you have provided during registering application webhook. You will be able to check if your system correctly receive the application and correctly decrypted it.
+                        <div class="sub_message">
+                            <div class="endpoint">
+                                GET url/random/application
+                            </div>
+                            <div style="margin-top: 20px;">On success, we will send a random application to your url. The application will look exactly the same as described under paragraph Webhooks -> Application details. You don't have to confirm of receiving like in webhook.</div>
+                        </div>
+                    </div>
+                    <div class="message">
+                        <h1 id="Get_random_decision">Get random decision</h1>
+                        Let's assume you have correctly registered to the decision webhook but how to check if client's decison comes correctly to your provided url. This method will send a random fake decision to the url you have provided during registering decision webhook.
+                        <br>
+                        <div class="sub_message">
+                            <div class="endpoint">
+                                GET url/random/decision
+                            </div>
+                            <div style="margin-top: 20px;">On success, we will send a random decision to your url. The decision will look exactly the same as described under paragraph Webhooks -> Client's decision details. The decision will be always accepted. You don't have to confirm of receiving like in webhook.</div>
+                        </div>
                     </div>
                     <br><br><br><br><br><br><br><br><br><br><br><br><br><br>
                 </div>
