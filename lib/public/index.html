@@ -43,12 +43,13 @@
                     </div><hr>
                     <a href="#Option_lists" class="dropdown-btn" id="Option_lists_">Option lists<i class="fa fa-caret-down"></i></a>
                     <div class="dropdown-container" id="MenuDrop5">
-                        <a href="#Loan purpose" class="sub" id="Loan_purpose_">Loan purpose</a>
+                        <a href="#Loan_purpose" class="sub" id="Loan_purpose_">Loan purpose</a>
                     </div><hr>
                     <a href="#How_to_test_Api" class="dropdown-btn" id="How_to_test_Api_">How to test API?<i class="fa fa-caret-down"></i></a>
                     <div class="dropdown-container" id="MenuDrop6">
                         <a href="#Get_random_application" class="sub" id="Get_random_application_">Get random application</a>
                         <a href="#Get_random_decision" class="sub" id="Get_random_decision_">Get random decision</a>
+                        <a href="#Testing_the_entire_flow" class="sub" id="Testing_the_entire_flow_">Testing the entire flow</a>
                     </div><hr>
                     <a class="sub" id="end_"></a>
                 </div>
@@ -1040,7 +1041,7 @@
                     </div>
                 </div>
                 <div class="section2">
-                    <h1 id="How_to_test_Api">Hot to test API?</h1>
+                    <h1 id="How_to_test_Api">How to test API?</h1>
                     <div class="title">
                         Test environment which is available after /test path, provides some additional methods to make testing easier. These methods try to simulate the real system. We highly recommend to use them before changing your system to production environment.
                         <br><br>
@@ -1065,6 +1066,41 @@
                                 GET url/random/decision
                             </div>
                             <div style="margin-top: 20px;">On success, we will send a random decision to your url. The decision will look exactly the same as described under paragraph Webhooks -> Client's decision details. The decision will be always accepted. You don't have to confirm of receiving like in webhook.</div>
+                        </div>
+                    </div>
+                    <div class="message">
+                        <h1 id="Testing_the_entire_flow">Testing the entire flow</h1>
+                        After configuring method for receiving applications and decision you will be able to test the entire flow I.e.
+                        <ol>
+                            <li>Receive test application</li>
+                            <li>Make offer or reject application</li>
+                            <li>Receive decision of client</li>
+                        </ol>
+                        <div class="sub_message">
+                            I. To start the flow make a call to the endpoint:
+                            <div class="endpoint">
+                                GET url/flow/start
+                            </div>
+                        </div>
+                        <div class="sub_message" style="margin-top: 20px;">
+                            II. To receive test application to the url you have provided during registering application webhook you have to call the endpoint:
+                            <div class="endpoint">
+                                GET url/flow/application
+                            </div>
+                            <div style="margin-top: 10px;">Remember to save application id. That id you will need in the next step - creating offer.</div>
+                        </div>
+                        <div class="sub_message" style="margin-top: 20px;">
+                            III. After receiving application you are able to create an offer. To send the offer you should use method from paragraph Offer -> Send offer. Remember to provide all mandatory fields. You can also reject the application. In that case there won't be next steps.
+                        </div>
+                        <div class="sub_message" style="margin-top: 20px;">
+                            IV. To receive decision to the url you have provided during registering decision webhook you have to call the endpoint:
+                            <div class="endpoint">
+                                GET url/flow/decision
+                            </div>
+                            <div style="margin-top: 10px;">The decision may be accepted or unaccepted.</div>
+                        </div>
+                        <div class="sub_message" style="margin-top: 20px;">
+                            V. If you want to start from the beginning you just have to perform instruction from point I.
                         </div>
                     </div>
                     <br><br><br><br><br><br><br><br><br><br><br><br><br><br>
@@ -1496,8 +1532,13 @@
                     &nbsp;&nbsp;-H <span style="color: #E5DA73">'Authorization: Bearer xxxxx...yyyyy...zzzzz'</span> &#92;<br>
                     &nbsp;&nbsp;-d '{<br>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #E5DA73">"application_id"</span>:<span style="color: #E5DA73">"1581933624854x717991094173476900"</span>,<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #E5DA73">"granted_amount"</span>:<span style="color: #E5DA73">"10000"</span>,<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #E5DA73">"total_cost"</span>:<span style="color: #E5DA73">"12000"</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #E5DA73">"is_offer_available"</span>:<span style="color: #90ee90">true</span>,<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #E5DA73">"granted_amount"</span>:10000,<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #E5DA73">"duration"</span>:12,<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #E5DA73">"guarantors"</span>:1,<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #E5DA73">"interest_rate"</span>:0.1029,<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #E5DA73">"early_repayment"</span>:<span style="color: #90ee90">false</span>,<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #E5DA73">"initial_amount"</span>:200<br>
                     &nbsp;&nbsp;&nbsp}'
                 </pre>`;
                 if (c) calculate();
@@ -1517,8 +1558,13 @@
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}, <br>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;body: { <br>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #E5DA73">"application_id"</span>: <span style="color: #E5DA73">"1581933624854x717991094173476900"</span><br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #E5DA73">"granted_amount"</span>: <span style="color: #E5DA73">"10000"</span><br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #E5DA73">"total_cost"</span>: <span style="color: #E5DA73">"12000"</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #E5DA73">"is_offer_available"</span>: <span style="color: #90ee90">true</span>,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #E5DA73">"granted_amount"</span>: 10000,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #E5DA73">"duration"</span>: 12,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #E5DA73">"guarantors"</span>: 1,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #E5DA73">"interest_rate"</span>: 0.1029,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #E5DA73">"early_repayment"</span>: <span style="color: #90ee90">false</span>,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #E5DA73">"initial_amount"</span>: 200<br>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
                         &nbsp;&nbsp;&nbsp;})<span style="color: #509fd3">.then</span>(res => res.json()); <br>
                     })();
@@ -1539,8 +1585,13 @@
                     &nbsp;&nbsp;&nbsp;&nbsp;},<br>
                     &nbsp;&nbsp;&nbsp;&nbsp;json={<br>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #E5DA73">'application_id'</span>: <span style="color: #E5DA73">'1581933624854x717991094173476900'</span>,<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #E5DA73">'granted_amount'</span>: <span style="color: #E5DA73">'10000'</span>,<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #E5DA73">'total_cost'</span>: <span style="color: #E5DA73">'12000'</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #E5DA73">'is_offer_available'</span>: <span style="color: #90ee90">true</span>,<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #E5DA73">'granted_amount'</span>: 10000,<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #E5DA73">'duration'</span>: 12,<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #E5DA73">'guarantors'</span>: 1,<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #E5DA73">'interest_rate'</span>: 0.1029,<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #E5DA73">'early_repayment'</span>: <span style="color: #90ee90">false</span>,<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #E5DA73">'initial_amount'</span>: 200<br>
                     &nbsp;&nbsp;&nbsp;&nbsp;}<br>
                     ).json()
                 </pre>`;
