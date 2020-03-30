@@ -74,19 +74,9 @@ button:hover {
 }
 
 .messageContent {
-    visibility: hidden;
     width: 100%;
     margin-top: 30px;
     font-size: 17px;
-}
-
-.messageContent .row {
-    display: table-row;
-}
-
-.messageContent .row .cell {
-    display: table-cell;
-    text-align: left;
 }
 
 .loader{
