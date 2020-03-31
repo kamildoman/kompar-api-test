@@ -41,12 +41,18 @@
                     <div class="dropdown-container" id="MenuDrop4">
                         <a href="#Send_offer" class="sub" id="Send_offer_">Send offer</a>
                     </div><hr>
-                    <a href="#Option_lists" class="dropdown-btn" id="Option_lists_">Option lists<i class="fa fa-caret-down"></i></a>
+                    <a href="#Methods_related_to_application" class="dropdown-btn" id="Methods_related_to_application_">Methods related to application<i class="fa fa-caret-down"></i></a>
                     <div class="dropdown-container" id="MenuDrop5">
+                        <a href="#Status_of_application" class="sub" id="Status_of_application_">Status of application</a>
+                        <a href="#Close_application" class="sub" id="Close_application_">Close application</a>
+                        <a href="#Application_is_signed" class="sub" id="Application_is_signed_">Application is signed</a>
+                    </div><hr>
+                    <a href="#Option_lists" class="dropdown-btn" id="Option_lists_">Option lists<i class="fa fa-caret-down"></i></a>
+                    <div class="dropdown-container" id="MenuDrop6">
                         <a href="#Loan_purpose" class="sub" id="Loan_purpose_">Loan purpose</a>
                     </div><hr>
                     <a href="#How_to_test_Api" class="dropdown-btn" id="How_to_test_Api_">How to test API?<i class="fa fa-caret-down"></i></a>
-                    <div class="dropdown-container" id="MenuDrop6">
+                    <div class="dropdown-container" id="MenuDrop7">
                         <a href="#Get_random_application" class="sub" id="Get_random_application_">Get random application</a>
                         <a href="#Get_random_decision" class="sub" id="Get_random_decision_">Get random decision</a>
                         <a href="#Testing_the_entire_flow" class="sub" id="Testing_the_entire_flow_">Testing the entire flow</a>
@@ -64,7 +70,7 @@
                 <div class="section2">
                     <h1 id="Introduction">Introduction</h1>
                     <div class="title">
-                        Our Web API provides users with fast and reliable access to data about clients' loans applications.<br><br>
+                        Our Web API provides users with fast and reliable access to data about clients' loan applications.<br><br>
                         The Kompar API is based on REST principles. It uses standard HTTP response codes and verbs, and token-based authentication.<br><br>
                         You must make all your requests to the API over HTTPS. Any requests made over HTTP will fail.<br><br>
                         For both environments (test, production), there is currently a rate limit of 30 requests per minute.<br> When you hit the limit, you’ll receive a 429 TOO MANY REQUESTS ERROR.
@@ -76,7 +82,7 @@
                 <div class="section2">
                     <h1 id="Get_started">Get started</h1>
                     <div class="title">
-                        If you are interested in connecting to our API contact with info@kompar.se or it@kompar.se<br>
+                        If you are interested in connecting to our API write an e-mail to info@kompar.se or it@kompar.se<br>
                         
                         <div class="sub_message">
                             <h3>Test url:</h3>
@@ -107,7 +113,7 @@
                             <div class="endpoint">
                                 GET url/token
                             </div>
-                            The header of this GET request must contains the following parameter:
+                            The header of this GET request must contain the following parameter:
                             <div class="parameter">
                                 <div class="rows">
                                     <div class="left">
@@ -286,7 +292,7 @@
                                     </div>
                                 </div>
                             </div><br>
-                            The body of this POST request must contains the following parameter:
+                            The body of this POST request must contain the following parameter:
                             <div class="parameter">
                                 <div class="rows">
                                     <div class="left">
@@ -376,7 +382,7 @@
                             <div class="endpoint">
                                 POST url/webhooks/decisions
                             </div>
-                            The header of this POST request in addition to the required authorization header must contains the following parameter:
+                            The header of this POST request in addition to the required authorization header must contain the following parameter:
                             <div class="parameter">
                                 <div class="rows">
                                     <div class="left">
@@ -395,7 +401,7 @@
                                     </div>
                                 </div>
                             </div><br>
-                            The body of this POST request must contains the following parameter:
+                            The body of this POST request must contain the following parameter:
                             <div class="parameter">
                                 <div class="rows">
                                     <div class="left">
@@ -555,7 +561,7 @@
                         </div>
                         <div class="sub_message">
                             <h1 id="Webhook_security">Webhook security</h1>
-                            After registering webhook you will receive event as soon as an occurs. The request authorization header will have a token. You should verify the token on your server to prevent attackers from imitating valid webhooks.
+                            After registering webhook you will receive event as soon as it occurs. The request authorization header will have a token. You should verify the token on your server to prevent attackers from imitating valid webhooks.
                             <br><br>
                             The header of our requests will have the following parameters:
                             <div class="parameter">
@@ -594,7 +600,7 @@
                         </div>
                         <div class="sub_message">
                             <h1 id="Application_details">Application details</h1>
-                            Application sended to you via webhook will always has the same structure. The body JSON will has the following fields:
+                            Application sent to you via webhook will always have the same structure. The body JSON will has the following fields:
                             <div class="parameter">
                                 <div class="rows">
                                     <div class="left">
@@ -632,7 +638,7 @@
                             </ul>
                             <div id="applicationWebhookDetailsContent"></div>
                             <br>
-                            The decrypted JSON will has the following fields:
+                            The decrypted JSON will have the following fields:
                             <div class="parameter">
                                 <div class="rows">
                                     <div class="left">
@@ -651,15 +657,7 @@
                                         <h2>Id of application in Kompar's system.</h2>
                                     </div>
                                 </div>
-                                <div class="rows">
-                                    <div class="left">
-                                        <h2>personal_id</h2>
-                                        string
-                                    </div>
-                                    <div class="right">
-                                        The Swedish national identification number of the client.
-                                    </div>
-                                </div>
+                                
                                 <div class="rows">
                                     <div class="left">
                                         <h2>name</h2>
@@ -698,6 +696,24 @@
                                 </div>
                                 <div class="rows">
                                     <div class="left">
+                                        <h2>company_revenue</h2>
+                                        float
+                                    </div>
+                                    <div class="right">
+                                        Monthly revenue of client's company.
+                                    </div>
+                                </div>
+                                <div class="rows">
+                                    <div class="left">
+                                        <h2>company_age</h2>
+                                        float
+                                    </div>
+                                    <div class="right">
+                                        The age of client's company.
+                                    </div>
+                                </div>
+                                <div class="rows">
+                                    <div class="left">
                                         <h2>amount</h2>
                                         int
                                     </div>
@@ -723,12 +739,31 @@
                                         The purpose of the application. Available options you may find in the option lists section.
                                     </div>
                                 </div>
+                                <div class="left" style="text-align: justify; margin-bottom: 10px; margin-top: 10px">
+                                    The optional fields (sometimes we will be able send to you additional data):
+                                </div>
+                                <div class="rows">
+                                    <div class="left">
+                                        <h2>company_last_year_revenue</h2>
+                                        float
+                                    </div>
+                                    <div class="right">
+                                    </div>
+                                </div>
+                                <div class="rows">
+                                    <div class="left">
+                                        <h2>company_description</h2>
+                                        string
+                                    </div>
+                                    <div class="right">
+                                    </div>
+                                </div>
                                 Additional fields will be determined with lender.
                             </div>
                         </div>
                         <div class="sub_message">
                             <h1 id="Client_details">Client's decision details</h1>
-                            Client details sended to you via webhook will always have the same structure. The body JSON will has the following fields: 
+                            Client details sended to you via webhook will always have the same structure. The body JSON will have the following fields: 
                             <div class="parameter">
                                 <div class="rows">
                                     <div class="left">
@@ -759,6 +794,15 @@
                             </div><br>
                             If offer is accepted you will receive as well:
                             <div class="parameter">
+                                <div class="rows">
+                                    <div class="left">
+                                        <h2>personal_id</h2>
+                                        string
+                                    </div>
+                                    <div class="right">
+                                        The Swedish national identification number of the client.
+                                    </div>
+                                </div>
                                 <div class="rows">
                                     <div class="left">
                                         <div class="title">
@@ -813,7 +857,7 @@
                             <div class="endpoint">
                                 POST url/offer
                             </div>
-                            The header of this POST request in addition to the required authorization header must contains the following parameter:
+                            The header of this POST request in addition to the required authorization header must contain the following parameter:
                             <div class="parameter">
                                 <div class="rows">
                                     <div class="left">
@@ -832,7 +876,7 @@
                                     </div>
                                 </div>
                             </div><br>
-                            The body of this POST request must contains the following parameter:
+                            The body of this POST request must contain the following parameter:
                             <div class="parameter">
                                 <div class="rows">
                                     <div class="left">
@@ -917,6 +961,24 @@
                                         Initial fee for loan.
                                     </div>
                                 </div>
+                                <div class="rows">
+                                    <div class="left">
+                                        <h2>total_cost</h2>
+                                        float
+                                    </div>
+                                    <div class="right">
+                                        The total cost to pay by client.
+                                    </div>
+                                </div>
+                                <div class="rows">
+                                    <div class="left">
+                                        <h2>monthly_cost</h2>
+                                        float
+                                    </div>
+                                    <div class="right">
+                                        The monthly cost to pay by client.
+                                    </div>
+                                </div>
                                 <div class="left" style="text-align: justify; margin-bottom: 10px; margin-top: 10px">
                                     The optional fields:
                                 </div>
@@ -931,20 +993,11 @@
                                 </div>
                                 <div class="rows">
                                     <div class="left">
-                                        <h2>total_cost</h2>
-                                        float
+                                        <h2>requirements</h2>
+                                        array of strings
                                     </div>
                                     <div class="right">
-                                        If you don't provide this field we will calculate the value ourselves.
-                                    </div>
-                                </div>
-                                <div class="rows">
-                                    <div class="left">
-                                        <h2>monthly_cost</h2>
-                                        float
-                                    </div>
-                                    <div class="right">
-                                        If you don't provide this field we will calculate the value ourselves.
+                                        Available options: "Prel. RR & BR", "Kontohistorik"
                                     </div>
                                 </div>
                             </div>
@@ -1015,6 +1068,120 @@
                     </div>
                 </div>
                 <div class="section2">
+                    <h1 id="Methods_related_to_application">Methods related to application</h1>
+                    <div class="title">
+                        All requests require authentication. 
+                    </div>
+                    <div class="message">
+                        <h1 id="Close_application">Close application</h1>
+                        If you want to withdraw an offer for a given application or you didn't sign a contract with client use that method to notify us.
+                        <div class="sub_message">
+                            <div class="endpoint">
+                                POST url/applications/close
+                            </div>
+
+                            The header of this POST request in addition to the required authorization header must contain the following parameter:
+                            <div class="parameter">
+                                <div class="rows">
+                                    <div class="left">
+                                        <div class="title">
+                                            Header
+                                        </div>
+                                        <hr>
+                                        Content-Type
+                                    </div>
+                                    <div class="right">
+                                        <div class="title">
+                                            Value
+                                        </div>
+                                        <hr>
+                                        application/json
+                                    </div>
+                                </div>
+                            </div><br>
+                            The body of this POST request must contain the following parameter:
+                            <div class="parameter">
+                                <div class="rows">
+                                    <div class="left">
+                                        <div class="title">
+                                            Body
+                                        </div>
+                                        <hr>
+                                        <h2>application_id</h2>
+                                        string
+                                    </div>
+                                    <div class="right">
+                                        <div class="title">
+                                            Value
+                                        </div>
+                                        <hr>
+                                        The id of application existed in our system.
+                                    </div>
+                                </div>
+                                <div class="left" style="text-align: justify; margin-bottom: 10px; margin-top: 10px">
+                                    The optional field:
+                                </div>
+                                <div class="rows">
+                                    <div class="left">
+                                        <h2>reason</h2>
+                                        string
+                                    </div>
+                                    <div class="right">
+                                        The amount you have granted for client.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="sub_message">
+                            <h1 id="Application_is_signed">Application is signed</h1>
+                            After signing contract with the client use that method to notify us.
+                            <div class="endpoint">
+                                POST url/applications/signed
+                            </div>
+
+                            The header of this POST request in addition to the required authorization header must contain the following parameter:
+                            <div class="parameter">
+                                <div class="rows">
+                                    <div class="left">
+                                        <div class="title">
+                                            Header
+                                        </div>
+                                        <hr>
+                                        Content-Type
+                                    </div>
+                                    <div class="right">
+                                        <div class="title">
+                                            Value
+                                        </div>
+                                        <hr>
+                                        application/json
+                                    </div>
+                                </div>
+                            </div><br>
+                            The body of this POST request must contain the following parameter:
+                            <div class="parameter">
+                                <div class="rows">
+                                    <div class="left">
+                                        <div class="title">
+                                            Body
+                                        </div>
+                                        <hr>
+                                        <h2>application_id</h2>
+                                        string
+                                    </div>
+                                    <div class="right">
+                                        <div class="title">
+                                            Value
+                                        </div>
+                                        <hr>
+                                        The id of application existed in our system.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="section2">
                     <h1 id="Option_lists">Option lists</h1>
                     <div class="title">
                         This section includes all option lists available through API.
@@ -1054,7 +1221,7 @@
                             <div class="endpoint">
                                 GET url/random/application
                             </div>
-                            <div style="margin-top: 20px;">On success, we will send a random application to your url. The application will look exactly the same as described under paragraph Webhooks -> Application details. You don't have to confirm of receiving like in webhook.</div>
+                            <div style="margin-top: 20px;">On success, we will send a random application to your url. The application will look exactly the same as described under paragraph Webhooks -> Application details. You don't have to confirm receiving like in webhook.</div>
                         </div>
                     </div>
                     <div class="message">
@@ -1065,7 +1232,7 @@
                             <div class="endpoint">
                                 GET url/random/decision
                             </div>
-                            <div style="margin-top: 20px;">On success, we will send a random decision to your url. The decision will look exactly the same as described under paragraph Webhooks -> Client's decision details. The decision will be always accepted. You don't have to confirm of receiving like in webhook.</div>
+                            <div style="margin-top: 20px;">On success, we will send a random decision to your url. The decision will look exactly the same as described under paragraph Webhooks -> Client's decision details. The decision will be always accepted. You don't have to confirm receiving like in webhook.</div>
                         </div>
                     </div>
                     <div class="message">
@@ -1087,7 +1254,7 @@
                             <div class="endpoint">
                                 GET url/flow/application
                             </div>
-                            <div style="margin-top: 10px;">Remember to save application id. That id you will need in the next step - creating offer.</div>
+                            <div style="margin-top: 10px;">Remember to save application id. You will need that id in the next step - creating offer.</div>
                         </div>
                         <div class="sub_message" style="margin-top: 20px;">
                             III. After receiving application you are able to create an offer. To send the offer you should use method from paragraph Offer -> Send offer. Remember to provide all mandatory fields. You can also reject the application. In that case there won't be next steps.
