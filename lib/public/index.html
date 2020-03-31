@@ -43,7 +43,6 @@
                     </div><hr>
                     <a href="#Methods_related_to_application" class="dropdown-btn" id="Methods_related_to_application_">Methods related to application<i class="fa fa-caret-down"></i></a>
                     <div class="dropdown-container" id="MenuDrop5">
-                        <a href="#Status_of_application" class="sub" id="Status_of_application_">Status of application</a>
                         <a href="#Close_application" class="sub" id="Close_application_">Close application</a>
                         <a href="#Application_is_signed" class="sub" id="Application_is_signed_">Application is signed</a>
                     </div><hr>
@@ -739,9 +738,7 @@
                                         The purpose of the application. Available options you may find in the option lists section.
                                     </div>
                                 </div>
-                                <div class="left" style="text-align: justify; margin-bottom: 10px; margin-top: 10px">
-                                    The optional fields (sometimes we will be able send to you additional data):
-                                </div>
+                                Additional fields will be determined with lender:
                                 <div class="rows">
                                     <div class="left">
                                         <h2>company_last_year_revenue</h2>
@@ -758,7 +755,37 @@
                                     <div class="right">
                                     </div>
                                 </div>
-                                Additional fields will be determined with lender.
+                                <div class="rows">
+                                    <div class="left">
+                                        <h2>attachments</h2>
+                                        array of strings
+                                    </div>
+                                    <div class="right">
+                                    </div>
+                                </div>
+                                <div class="rows">
+                                    <div class="left">
+                                        <h2>mortgage_amount</h2>
+                                        float
+                                    </div>
+                                    <div class="right">
+                                    </div>
+                                </div>
+                                <div class="rows">
+                                    <div class="left">
+                                        <h2>property_existens</h2>
+                                    </div>
+                                    <div class="right">
+                                    </div>
+                                </div>
+                                <div class="rows">
+                                    <div class="left">
+                                        <h2>description_of_property</h2>
+                                        text
+                                    </div>
+                                    <div class="right">
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="sub_message">
@@ -794,43 +821,8 @@
                             </div><br>
                             If offer is accepted you will receive as well:
                             <div class="parameter">
-                                <div class="rows">
-                                    <div class="left">
-                                        <h2>personal_id</h2>
-                                        string
-                                    </div>
-                                    <div class="right">
-                                        The Swedish national identification number of the client.
-                                    </div>
-                                </div>
-                                <div class="rows">
-                                    <div class="left">
-                                        <div class="title">
-                                            Key
-                                        </div>
-                                        <hr>
-                                        <h2>email</h2>
-                                        string
-                                    </div>
-                                    <div class="right">
-                                        <div class="title">
-                                            Description
-                                        </div>
-                                        <hr>
-                                        <h2></h2>
-                                    </div>
-                                </div>
-                                <div class="rows">
-                                    <div class="left">
-                                        <h2>phone_number</h2>
-                                        string
-                                    </div>
-                                    <div class="right">
-                                    
-                                    </div>
-                                </div>
-                            </div><br>
-                            Other fields and actions will be determined with lender.<br><br>
+                                Fields and actions will be determined with lender.
+                            </div>
                         </div>
                         <div class="sub_message">
                             <h1 id="Confirmation_receiving">Confirmation of receiving</h1>
@@ -1127,7 +1119,7 @@
                                         string
                                     </div>
                                     <div class="right">
-                                        The amount you have granted for client.
+                                        Reason of canceling.
                                     </div>
                                 </div>
                             </div>
@@ -1363,7 +1355,7 @@
                     for (var i = 0; i < elements.length; i++) {
                         const elem = elements[i];
                         const nextElem = elements[i+1];
-                        if (currentScrollPos >= elem.offsetTop && currentScrollPos < nextElem.offsetTop && elem.id != last) {
+                        if (currentScrollPos >= elem.offsetTop && currentScrollPos < nextElem.offsetTop && elem.id != last && nextElem != null && nextElem != undefined) {
                             document.getElementById(`${elem.id}_`).style.background="rgb(194, 193, 193)";
                             document.getElementById(`${last}_`).style.background="#509fd3";
                             last = elem.id;
