@@ -1677,12 +1677,13 @@
                 `<pre>
                     <span style="color: orange">from</span> base64 <span style="color: orange">import</span> b64decode<br>
                     <span style="color: orange">from</span> Crypto.Cipher <span style="color: orange">import</span> AES<br>
+                    <br>
                     body = BODY OF THE REQUEST<br>
                     key = YOUR KEY<br>
-                    iv = b64decode(body["iv"]).hex()<br>
-                    encryptedData = b64decode(body["data"]).hex()<br>
-                    decryptedData = AES.new(key, AES.MODE_CBC, iv).decrypt(<span style="color: orange">bytes.fromhex(data))<br>
-                    finalData = decryptedData.decode("utf-8")
+                    iv = b64decode(body[<span style="color: #E5DA73">"iv"</span>]).hex()<br>
+                    encryptedData = b64decode(body[<span style="color: #E5DA73">"data"</span>]).hex()<br>
+                    decryptedData = AES.new(key, AES.MODE_CBC, iv).decrypt(<span style="color: orange">bytes</span>.fromhex(data))<br>
+                    finalData = decryptedData.decode(<span style="color: #E5DA73">"utf-8"</span>)
                 </pre>`; 
                 if (c) calculate();
             }
