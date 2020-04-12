@@ -1664,7 +1664,7 @@
                     <span style="color: #509fd3">const</span> body = BODY OF THE REQUEST; <br>
                     <span style="color: #509fd3">const</span> key = YOUR KEY; <br>
                     <span style="color: #509fd3">const</span> iv = <span style="color: orange">Buffer</span>.from(body.iv, <span style="color: #E5DA73">"base64"</span>).toString(<span style="color: #E5DA73">"hex"</span>);<br>
-                    <span style="color: #509fd3">const</span> encryptedData = <span style="color: orange">Buffer</span>.from(body.data, <span style="color: #E5DA73">"base64"</span>).toString("hex");<br>
+                    <span style="color: #509fd3">const</span> encryptedData = <span style="color: orange">Buffer</span>.from(body.data, <span style="color: #E5DA73">"base64"</span>).toString(<span style="color: #E5DA73">"hex"</span>);<br>
                     <span style="color: #509fd3">const</span> decipher = crypto.createDecipheriv(<span style="color: #E5DA73">"AES-256-CBC"</span>, key, iv);<br>
                     <span style="color: #509fd3">const</span> decrypted = decipher.update(encryptedData, <span style="color: #E5DA73">"hex"</span>, <span style="color: #E5DA73">"utf8"</span>) + decipher.final(<span style="color: #E5DA73">"utf8"</span>);<br>
                 </pre>`; 
@@ -1675,7 +1675,7 @@
                 const div = document.getElementById("applicationWebhookDetailsContent");
                 div.innerHTML = 
                 `<pre>
-                    <span style="color: orange">from</span> base64 <span style="color: orange"import</span> b64decode<br>
+                    <span style="color: orange">from</span> base64 <span style="color: orange">import</span> b64decode<br>
                     <span style="color: orange">from</span> Crypto.Cipher <span style="color: orange"import</span> AES<br>
                     body = BODY OF THE REQUEST<br>
                     key = YOUR KEY<br>
