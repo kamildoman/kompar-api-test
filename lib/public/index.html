@@ -1361,7 +1361,7 @@
                     for (var i = 0; i < elements.length; i++) {
                         const elem = elements[i];
                         const nextElem = elements[i+1];
-                        if (currentScrollPos >= elem.offsetTop && currentScrollPos < nextElem.offsetTop && elem.id != last && nextElem != null && nextElem != undefined) {
+                        if (currentScrollPos >= elem.offsetTop && nextElem != null && nextElem != undefined && currentScrollPos < nextElem.offsetTop && elem.id != last) {
                             document.getElementById(`${elem.id}_`).style.background="rgb(194, 193, 193)";
                             document.getElementById(`${last}_`).style.background="#509fd3";
                             last = elem.id;
