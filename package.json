@@ -17,20 +17,21 @@
   },
   "homepage": "https://github.com/Kompar-app/kompar-api-se#readme",
   "dependencies": {
-    "@types/node": "^13.1.8",
+    "@types/node": "^13.13.33",
     "body-parser": "^1.19.0",
     "colors": "^1.4.0",
+    "compression": "^1.7.4",
     "express": "^4.17.1",
-    "express-rate-limit": "^5.1.1",
-    "helmet": "^3.21.3",
+    "express-rate-limit": "^5.2.3",
+    "helmet": "^3.23.3",
     "jsonwebtoken": "^8.5.1",
-    "mongodb": "^3.5.2",
-    "node-fetch": "^2.6.0",
+    "mongodb": "^3.6.3",
+    "node-fetch": "^2.6.1",
     "request": "^2.88.2",
-    "request-promise": "^4.2.5"
+    "request-promise": "^4.2.6"
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "mocha": "^7.1.0"
+    "mocha": "^8.2.1"
   }
 }
