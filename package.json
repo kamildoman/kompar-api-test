@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/Kompar-app/kompar-api-se#readme",
   "dependencies": {
-    "@types/node": "^13.13.33",
+    "@types/node": "^13.13.40",
     "body-parser": "^1.19.0",
     "colors": "^1.4.0",
     "compression": "^1.7.4",
