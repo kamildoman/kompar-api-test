@@ -23,6 +23,7 @@
     "compression": "^1.7.4",
     "express": "^4.17.1",
     "express-rate-limit": "^5.2.3",
+    "file-type": "^16.5.3",
     "helmet": "^3.23.3",
     "https-proxy-agent": "^5.0.0",
     "jsonwebtoken": "^8.5.1",
