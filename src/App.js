@@ -6,9 +6,7 @@ const Test = () => {
 };
 
 const App = () => {
-  return (
-      <div>SSS</div>
-  );
+  return <div>TEST</div>;
 };
 
 export default App;
