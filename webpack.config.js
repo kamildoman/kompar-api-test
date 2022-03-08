@@ -1,28 +1,26 @@
 const path = require("path");
+const HtmlWebPackPlugin = require("html-webpack-plugin");
+const htmlPlugin = new HtmlWebPackPlugin({
+  template: "./src/index.html",
+  filename: "./index.html"
+});
 
 module.exports = {
-  mode: "production",
-  devServer: {
-    static: {
-      directory: path.join(__dirname, "./src"),
-    },
-    historyApiFallback: true,
+  entry: "./src/index.js",
+  output: {
+    path: path.join(__dirname, 'dist'),
+    filename: "main.js"
   },
-  entry: path.resolve(__dirname, "./src/index.js"),
+  plugins: [htmlPlugin],
   module: {
     rules: [
       {
-        test: /\.js$/,
-        use: "babel-loader",
-      },
-    ],
-  },
-  output: {
-    filename: "bundle.js",
-  },
-  performance: {
-    hints: false,
-    maxEntrypointSize: 512000,
-    maxAssetSize: 512000,
-  },
+        test: /\.(js|jsx)$/,
+        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader"
+        }
+      }
+    ]
+  }
 };

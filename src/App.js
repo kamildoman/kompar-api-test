@@ -2,16 +2,12 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 const Test = () => {
-  return <div>Hello</div>;
+  return <div>Hello1</div>;
 };
 
 const App = () => {
   return (
-    <Router>
-      <Routes>
-        <Route exact path="/" element={<Test />} />
-      </Routes>
-    </Router>
+      <div>SSS</div>
   );
 };
 
