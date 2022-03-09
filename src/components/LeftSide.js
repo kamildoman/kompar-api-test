@@ -42,23 +42,14 @@ const LeftSide = () => {
       <Logo>
         <img src={logo} alt="logo" />
       </Logo>
-      {sections.map((section, key) =>
-        section[0] === activeSection[0][0] ? (
-          <SectionButton
-            key={key}
-            name={section}
-            setActiveSection={setActiveSection}
-            activeSection={activeSection}
-          />
-        ) : (
-          <SectionButton
-            key={key}
-            name={section}
-            setActiveSection={setActiveSection}
-            activeSection={activeSection}
-          />
-        )
-      )}
+      {sections.map((section, key) => (
+        <SectionButton
+          key={key}
+          name={section}
+          setActiveSection={setActiveSection}
+          activeSection={activeSection}
+        />
+      ))}
     </Container>
   );
 };
