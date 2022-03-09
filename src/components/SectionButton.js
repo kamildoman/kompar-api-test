@@ -1,34 +1,68 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 
-const SectionButton = ({ name, setActiveSection, activeSection }) => {
+const SectionButton = ({ name, activeSection, setActiveSection }) => {
+  const [subcategory, setSubcategory] = useState("");
   const style = (sectionName) => {
-    return {
-      backgroundColor:
-        activeSection[0][activeSection[1]] === sectionName ? "#f5fbff" : "#fff",
-      color:
-        activeSection[0][activeSection[1]] === sectionName ? "#556cd6" : null,
-    };
+    if (
+      (JSON.stringify(activeSection) === JSON.stringify(sectionName) &&
+        !subcategory) ||
+      sectionName === subcategory
+    ) {
+      return { backgroundColor: "#f5fbff", color: "#556cd6" };
+    }
+  };
+
+  const renderSubsubsection = (subsection) => {
+    if (
+      Object.values(subsection)[0].includes(subcategory) ||
+      subsection === subcategory
+    ) {
+      return true;
+    }
+  };
+
+  const createSubsection = (subsection, key, toShow = subsection) => {
+    return (
+      <SubSection
+        style={style(subsection)}
+        onClick={() => setSubcategory(subsection)}
+        key={key}
+      >
+        {toShow}
+      </SubSection>
+    );
   };
 
   return (
     <Container>
       <Section
-        style={style(name[0])}
-        onClick={() => setActiveSection([name, 0])}
+        style={style(name)}
+        onClick={() => {
+          setActiveSection(name);
+          setSubcategory("");
+        }}
       >
         {name[0]}
       </Section>
-      {activeSection[0][0] === name[0] &&
-        name.slice(1).map((section, key) => (
-          <SubSection
-            style={style(section)}
-            onClick={() => setActiveSection([name, key + 1])}
-            key={key}
-          >
-            {section}
-          </SubSection>
-        ))}
+      {JSON.stringify(name) === JSON.stringify(activeSection) &&
+        name[1].map((subsection, key) => {
+          if (typeof subsection === "string") {
+            return createSubsection(subsection, key);
+          } else {
+            return (
+              <Container key={key}>
+                {createSubsection(subsection, key, Object.keys(subsection))}
+                {renderSubsubsection(subsection) &&
+                  Object.values(subsection)[0].map((obj, key) => {
+                    {
+                      return createSubsection(obj, key);
+                    }
+                  })}
+              </Container>
+            );
+          }
+        })}
     </Container>
   );
 };
@@ -59,6 +93,7 @@ const SubSection = styled(Section)`
   font-size: 15px;
   margin: 3px 0;
   font-weight: 400;
+  flex-direction: column;
 `;
 
 export default SectionButton;

@@ -3,51 +3,51 @@ import styled from "styled-components";
 import SectionButton from "./SectionButton";
 import logo from "../images/komparLogo.png";
 
-const LeftSide = () => {
-  const sections = [
-    ["Introduction"],
-    ["Get started"],
-    [
-      "Authorization",
-      "Token",
-      "Receiving access token",
-      "The token is returned",
-      "Sample request",
-    ],
-    ["Authentication", "Header", "Sample request"],
-    [
-      "Webhooks",
-      "About webhooks",
-      "Applications webhook",
-      "Client's decision webhook",
-      "Remove webhook",
-      "Webhook security",
-      "Application details",
-      "Client's decision details",
-      "Confirmation of receiving",
-    ],
-    ["Offer"],
-    [
-      "Methods related to application",
-      "Close application",
-      "Application is signed",
-    ],
-    ["Option list", "Loan purpose"],
-    ["How to test API?"],
-  ];
+const sections = {
+  Introduction: [],
+  "Get started": [],
+  Authorization: [
+    { Token: ["subsub", "subsub2", "subsub3"] },
+    "Receiving access token",
+    "The token is returned",
+    "Sample request",
+  ],
+  Authentication: ["Header", "Sample request"],
+  Webhooks: [
+    { "About webhooks": ["abc", "def"] },
+    "Applications webhook",
+    "Client's decision webhook",
+    "Remove webhook",
+    "Webhook security",
+    "Application details",
+    "Client's decision details",
+    "Confirmation of receiving",
+  ],
+  Offer: [],
 
-  const [activeSection, setActiveSection] = useState([["Introduction"], 0]);
+  "Methods related to application": [
+    "Close application",
+    "Application is signed",
+  ],
+  "Option list": ["Loan purpose"],
+  "How to test API?": [],
+};
+
+const LeftSide = () => {
+  const [activeSection, setActiveSection] = useState(
+    Object.entries(sections)[0]
+  );
   return (
     <Container>
       <Logo>
         <img src={logo} alt="logo" />
       </Logo>
-      {sections.map((section, key) => (
+      {Object.entries(sections).map((key) => (
         <SectionButton
           key={key}
-          name={section}
-          setActiveSection={setActiveSection}
+          name={key}
           activeSection={activeSection}
+          setActiveSection={setActiveSection}
         />
       ))}
     </Container>
