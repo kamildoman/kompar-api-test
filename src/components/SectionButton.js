@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 
-const SectionButton = ({ name, activeSection, setActiveSection }) => {
+const SectionButton = ({ data, activeSection, setActiveSection }) => {
   const [subcategory, setSubcategory] = useState("");
+  const [categoryTimesClicked, setCategoryTimesClicked] = useState(1);
   const style = (sectionName) => {
     if (
       (JSON.stringify(activeSection) === JSON.stringify(sectionName) &&
@@ -15,8 +16,8 @@ const SectionButton = ({ name, activeSection, setActiveSection }) => {
 
   const renderSubsubsection = (subsection) => {
     if (
-      Object.values(subsection)[0].includes(subcategory) ||
-      subsection === subcategory
+      JSON.stringify(subsection) === JSON.stringify(subcategory) ||
+      subsection.elements.includes(subcategory)
     ) {
       return true;
     }
@@ -34,30 +35,38 @@ const SectionButton = ({ name, activeSection, setActiveSection }) => {
     );
   };
 
+  const handleClick = (name) => {
+    setSubcategory("");
+    if (JSON.stringify(name) === JSON.stringify(activeSection)) {
+      setCategoryTimesClicked(categoryTimesClicked + 1);
+    } else {
+      setCategoryTimesClicked(1);
+    }
+    setActiveSection(name);
+  };
+
   return (
     <Container>
       <Section
-        style={style(name)}
+        style={style(data)}
         onClick={() => {
-          setActiveSection(name);
-          setSubcategory("");
+          handleClick(data);
         }}
       >
-        {name[0]}
+        {data.name}
       </Section>
-      {JSON.stringify(name) === JSON.stringify(activeSection) &&
-        name[1].map((subsection, key) => {
+      {JSON.stringify(data) === JSON.stringify(activeSection) &&
+        categoryTimesClicked % 2 != 0 &&
+        data.elements.map((subsection, key) => {
           if (typeof subsection === "string") {
             return createSubsection(subsection, key);
           } else {
             return (
               <Container key={key}>
-                {createSubsection(subsection, key, Object.keys(subsection))}
+                {createSubsection(subsection, key, subsection.name)}
                 {renderSubsubsection(subsection) &&
-                  Object.values(subsection)[0].map((obj, key) => {
-                    {
-                      return createSubsection(obj, key);
-                    }
+                  subsection.elements.map((subsubsection, key) => {
+                    return createSubsection(subsubsection, key);
                   })}
               </Container>
             );
